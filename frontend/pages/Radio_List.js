@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View,Text} from "react-native";
-import { Button, } from "react-native-paper";
+import { Button, IconButton, TextInput} from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -83,14 +83,16 @@ export default function RadioList({navigation}){
             right
             checkedIcon='dot-circle-o'
             uncheckedIcon='circle-o'
+            checkedColor="#EE4266"
             checked={checked[it.indexOf(item)]}
             containerStyle = {styles.itembox}
-            textStyle = {fontSize = 28}
+            textStyle = {{fontSize: 20, fontWeight: 'normal'}}
             onPress={() => handleOnChange(it.indexOf(item))}
             />
             </View>
         </TouchableOpacity>
     );
+
     return (
         <View  style={styles.loading}>
             {getContent()}
@@ -104,15 +106,13 @@ export default function RadioList({navigation}){
                </View>
                 <Text style = {{fontWeight: 600, fontSize : 28}}> we came up with </Text>
              </View>
-             <View style = {{height: 300}}>
-        <ScrollView contentContainerStyle = {styles.container}>
-            {items}
-        </ScrollView>
+            <View style = {{marginLeft:50,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
+                <ScrollView contentContainerStyle = {styles.container}>
+                    {items}
+                </ScrollView>
+            </View>
+        <Button labelStyle = {styles.buttontext} style = {styles.button} mode = "contained">Optimize Cost!</Button>
         </View>
-        <Button labelStyle = {styles.buttontext} style = {styles.button} mode = "contained" onPress={() => navigation.navigate('Generate')}>Optimize Cost!</Button>
-        </View>
-        )}
-        
         </View>
     )
 
@@ -129,12 +129,17 @@ const styles = StyleSheet.create({
         padding:10,
         backgroundcolor : '#FFFFFF',
         flexDirection : 'column',
-        borderColor : '#303030'
+        borderColor : '#303030',
+        justifyContent: 'center',
+        
     },
     itembox :{
         flexDirection : 'row',
-        backgroundColor :'#FDECF0', 
-        padding : 10, 
+        backgroundColor :'rgba(238, 66, 102, 0.1)', 
+        padding: 5, 
+        paddingLeft: 20,
+        height: 60,
+        borderRadius: 2,
     },
     itemtext:{
         borderRadius:6,
@@ -146,19 +151,24 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         marginTop : 50,
         marginBottom : 50,
-        marginLeft : 35
+        marginLeft : 45
         
     },
     button : {
         marginBottom : 50,
         marginTop : 50,
+        marginLeft : 45,
         height : 40,
+        backgroundColor : '#303030',
+        justifyContent :'center',
+        borderRadius:10
     },
     buttontext :{
-        padding : 3,
-        fontSize : 20,
         justifyContent : 'center',
         alignItems : 'center'
+    },
+    add:{
+        alignSelf:'flex-end'
     }
 }
 );

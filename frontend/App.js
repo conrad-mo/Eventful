@@ -36,13 +36,15 @@ const App = () => {
         <Stack.Screen
         name = "Radio_List"
         component = {RadioList}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,
+                    gestureEnabled: false }}
 
         />
-<Stack.Screen
+        <Stack.Screen
           name="Generate"
           component={Generate}
-          options={{ headerShown: false }}
+          options={{ headerShown: false,
+                    gestureEnabled: false }}
         
         />
 
