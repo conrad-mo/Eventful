@@ -23,6 +23,7 @@ jobs:
         cat src/api.rs
     - name: Set up Docker Buildx
       run: |
+          cd backend
           docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t conradmo/eventful .
           docker run --rm --privileged tonistiigi/binfmt --install all
           docker buildx create --use --name eventful-builder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement security.insecure' --use
