@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider, Button } from 'react-native-paper';
@@ -15,7 +15,6 @@ const Generate = ({ navigation }) => {
     let [error, setError] = useState();
     let [response, setResponse] = useState();
     let items = ['item1', 'item2', 'item3', 'item4', '...'];
-    let descriptions = ['pepfdsfvdfghjhgfrtyuikfjdsbvwerbkjfhvwbrtkegyaauvb jvhgfe', 'popo', 'papa', 'pupu', '...'];
 
     useEffect(() => {
         fetch(`https://jsonplaceholder.typicode.com/posts?_limit=8`).then(res => res.json()).then((result) => {
@@ -47,33 +46,21 @@ const Generate = ({ navigation }) => {
         // }
 
         console.log(response);
-        return (
-            <PaperProvider theme={paperTheme}>
-                <StatusBar style="auto"/>
-                <View>
-                    <Text style={{ fontWeight: 'bold', fontSize: 28, textAlign: 'center', padding: '5%', top: '120%'}}>Here’s a {'\n'}<Text style= {{color: '#EE4266'}}>list of affordable items</Text>{'\n'} we chose</Text>
-                    {/* {response} */}
-                </View>
-                <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(238, 66, 102, 0.1)', marginTop: '5%', top: '20%', maxHeight: '30%', left: '5%', maxWidth: '90%', overflow: 'hidden' }}>    
-                    <ScrollView style={{width: '100%'}}>
-                    <List.Section style={{ maxHeight: '100%' }}>
-                        {items.map((item, index) => (
-                            <List.Item
-                            key={index}
-                            title={item}
-                            description={descriptions[index]}
-                            left={props => <List.Icon {...props} icon="folder" />}
-                            onPress={() => Linking.openURL('http://google.com')}
-                            style={{ width: '100%', borderBottomWidth: 20, borderBottomColor: '#f1f1f1' }}
-                            />
-                        ))}
-                    </List.Section>
-                    </ScrollView>
-                </View>
-                <Button mode="contained"  onPress={() => navigation.navigate('Card')} style={styles.customButton}
-                    labelStyle={{ textAlign: 'center' }} contentStyle={{ backgroundColor: 'black' }}>New Event
-                </Button>
-            </PaperProvider>
+        return   (
+            <View>
+                <Text style={{ fontWeight: 'bold', fontSize: 24, textAlign: 'center', padding: '10%', top: '-100%'}}>Here’s {'\n'}<Text style= {{color: '#EE4266'}}>a list of affordable items</Text>{'\n'} we chose</Text>
+                {/* {response} */}
+                <List.Section>
+                    {items.map((item, index) => (
+                        <List.Item
+                        key={index}
+                        title={`Item ${index + 1}`}
+                        description="Item description"
+                        left={props => <List.Icon {...props} icon="folder" />}
+                        />
+                    ))}
+                </List.Section>
+            </View>
         );
 
 
@@ -101,13 +88,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         top: -20
-    },
-    customButton: {
-        width: '85%',
-        left: '7.5%',
-        top: 300,
-        color: 'black',
-        borderRadius: 10
     },
     text: {
         top: 40
