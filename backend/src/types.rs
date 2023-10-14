@@ -41,7 +41,7 @@ pub async fn gptcall(prompt: String) -> Result<String, Error>{
     headers.insert("Content-Type", HeaderValue::from_static("application/json"));
     let response = client.post("https://api.openai.com/v1/chat/completions").headers(headers).json(&body).send().await?;
     let response_body = response.text().await?;
-    println!("{:?}", response_body);
+    //println!("{:?}", response_body);
     if !(response_body.is_empty()){
         let index1 = response_body.find("\"content\": \"");
         let indexone =  index1.unwrap() + 12;
