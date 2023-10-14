@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     whiteButton: {
         width: '85%',
         height: 40,
-        marginTop: 340,
+        marginTop: 370,
         borderRadius: 10,
         left: 30
     },
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     blackButton: {
         width: '85%',
         height: 40,
-        marginTop: 24,
+        marginTop: 23,
         borderRadius: 10,
         left: 30
     }

@@ -51,10 +51,10 @@ const Generate = ({ navigation }) => {
             <PaperProvider theme={paperTheme}>
                 <StatusBar style="auto"/>
                 <View>
-                    <Text style={{ fontWeight: 'bold', fontSize: 28, textAlign: 'center', padding: '5%', top: '120%'}}>Here’s a {'\n'}<Text style= {{color: '#EE4266'}}>list of affordable items</Text>{'\n'} we chose</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 28, textAlign: 'center', padding: '5%', top: '140%'}}>Here’s a {'\n'}<Text style= {{color: '#EE4266'}}>list of affordable items</Text>{'\n'} we chose</Text>
                     {/* {response} */}
                 </View>
-                <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(238, 66, 102, 0.1)', marginTop: '5%', top: '20%', maxHeight: '30%', left: '5%', maxWidth: '90%', overflow: 'hidden' }}>    
+                <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(238, 66, 102, 0.1)', marginTop: '12%', top: '20%', maxHeight: '30%', left: '5%', maxWidth: '90%', overflow: 'hidden' }}>    
                     <ScrollView style={{width: '100%'}}>
                     <List.Section style={{ maxHeight: '100%' }}>
                         {items.map((item, index) => (
@@ -62,7 +62,7 @@ const Generate = ({ navigation }) => {
                             key={index}
                             title={item}
                             description={descriptions[index]}
-                            left={props => <List.Icon {...props} icon="folder" />}
+                            left={props => <List.Icon {...props} icon="link-variant" />}
                             onPress={() => Linking.openURL('http://google.com')}
                             style={{ width: '100%', borderBottomWidth: 20, borderBottomColor: '#f1f1f1' }}
                             />
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     customButton: {
         width: '85%',
         left: '7.5%',
-        top: 300,
+        top: 310,
         color: 'black',
         borderRadius: 10
     },
