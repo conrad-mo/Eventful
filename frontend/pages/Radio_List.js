@@ -163,7 +163,6 @@ export default function RadioList({navigation}){
             </View>
         <Button labelStyle = {styles.buttontext} onPress={() => navigation.navigate('Generate')} style = {styles.button} mode = "contained">Optimize Cost!</Button>
         </View>
-          )}
         </View>
             )}
         </View>
