@@ -72,9 +72,10 @@ export default function RadioList({navigation}){
         setChecked(updatedChecked);
     }
 
-    let items = it.map((item)=> 
-        <TouchableOpacity key={item}>
-            <View>
+    let items = it.map((item,index)=> 
+        index < 10 ?
+        <TouchableOpacity key = {item}>
+            <View >
             <CheckBox
             backgroundcolor = '#FDECF0'
             center
@@ -90,15 +91,64 @@ export default function RadioList({navigation}){
             onPress={() => handleOnChange(it.indexOf(item))}
             />
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity> : ""
     );
 
+   const [visibility,setVisibility] = useState(false);
+   const [text, setText] = useState("");
     return (
-        <View  style={styles.loading}>
-            {getContent()}
+        <View   style={styles.loading}>
+             {getContent()}
             {!isLoading && (
-            <View style = {{flexDirection:"column", width: 350, marginTop:120, justifyContent :'center'}}>
-            
+                <View>
+            <IconButton style = {{alignSelf:'flex-end'}} size = {32} icon="plus" onPress = {()=>{
+                setVisibility(true);
+            }}/>
+            <Modal
+            animationType="slide" 
+            transparent = {true}
+            visible={visibility}
+            onDismiss={()=>{setVisibility(false)}}
+            onRequestClose={() => {
+             Alert.alert('Modal has been closed.');
+            setVisibility(false);
+        }}>
+         <View>
+            <TextInput
+                clearButtonMode="always"
+                mode="outlined"
+                style = {styles.centeredView}
+                label="add item"
+                value={text}
+                onChangeText={text => setText(text)}
+                activeOutlineColor="#EE4266"/>
+        </View>
+            <Button onPress={()=>{
+                if(items.length < 10){
+                    items = [...items,<TouchableOpacity>
+                        <View >
+                        <CheckBox
+                        backgroundcolor = '#FDECF0'
+                        center
+                        title={text}
+                        size={26}
+                        right
+                        checkedIcon='dot-circle-o'
+                        uncheckedIcon='circle-o'
+                        checkedColor="#EE4266"
+                        checked={checked[it.indexOf(text)]}
+                        containerStyle = {styles.itembox}
+                        textStyle = {fontSize = 28}
+                        onPress={() => handleOnChange(it.indexOf(text))}
+                        />
+                        </View>
+                    </TouchableOpacity>]
+                }
+                setVisibility(false)
+                }}> done!</Button>
+        </Modal>
+    
+        <View style = {{flexDirection:"column", width: 350, justifyContent :'center'}}>
             <View style ={styles.textwrap}>
                 <View style = {{flexDirection:'row'}}>
                 <Text style = {{fontWeight: 600, fontSize : 28}} > Here's a </Text>
@@ -113,6 +163,8 @@ export default function RadioList({navigation}){
             </View>
         <Button labelStyle = {styles.buttontext} style = {styles.button} mode = "contained">Optimize Cost!</Button>
         </View>
+        </View>
+            )}
         </View>
     )
 
@@ -131,6 +183,7 @@ const styles = StyleSheet.create({
         flexDirection : 'column',
         borderColor : '#303030',
         justifyContent: 'center',
+        
         
     },
     itembox :{
@@ -169,6 +222,17 @@ const styles = StyleSheet.create({
     },
     add:{
         alignSelf:'flex-end'
+    },
+    centeredView:{
+        marginTop: '90%',
+        justifyContent:'center',
+        alignSelf:'center',
+        height: 60,
+        width:'80%',
+        backgroundColor:'#FFFFFF',
+        borderRadius:10,
+        fontSize : 24
+
     }
 }
 );
