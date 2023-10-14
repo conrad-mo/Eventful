@@ -30,7 +30,7 @@ const Budget = ({ navigation }) => {
             onChangeText={onChangeSearch}
             value={searchQuery}
         />
-        <Button mode="contained" onPress={() => navigation.navigate('Generate')} style={styles.whiteButton}
+        <Button mode="contained" onPress={() => navigation.navigate('Radio_List')} style={styles.whiteButton}
             labelStyle={{ textAlign: 'center', color: 'white', }} contentStyle={{ backgroundColor: 'black', }} title="Next">Find a list of items
         </Button>
         <Button mode="contained" onPress={() => navigation.navigate('ChooseEvent')} style={styles.blackButton}
