@@ -106,12 +106,12 @@ export default function RadioList({navigation}){
                </View>
                 <Text style = {{fontWeight: 600, fontSize : 28}}> we came up with </Text>
              </View>
-            <View style = {{marginLeft:50,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
+            <View style = {{marginLeft:0,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
                 <ScrollView contentContainerStyle = {styles.container}>
                     {items}
                 </ScrollView>
             </View>
-        <Button labelStyle = {styles.buttontext} style = {styles.button} mode = "contained">Optimize Cost!</Button>
+        <Button labelStyle = {styles.buttontext} onPress={() => navigation.navigate('Generate')} style = {styles.button} mode = "contained">Optimize Cost!</Button>
         </View>
           )}
         </View>
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     button : {
         marginBottom : 50,
         marginTop : 50,
-        marginLeft : 45,
+        // marginLeft : 45,
         height : 40,
         backgroundColor : '#303030',
         justifyContent :'center',
