@@ -7,7 +7,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::routing::post;
 use tower_http::cors::{Any, CorsLayer};
-use crate::types::{OptimizePrompt, ItemsPrompt, gptcall};
+use crate::types::{OptimizePrompt, ItemsPrompt, gptcall, shoppingapicall};
 
 
 #[tokio::main]
@@ -17,7 +17,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(root))
         .route("/generateitems", post(items_gen))
-        .route("/optimizeitems", post(root))
+        .route("/optimizeitems", post(optimize_items))
         .layer(cors);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
@@ -42,6 +42,7 @@ async fn items_gen(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
     (StatusCode::OK, Json(vector))
 }
 
-async fn optimize_items(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
-
+async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoResponse {
+    let response = shoppingapicall(String::from("Paper plates"));
+    (StatusCode::OK, Json(response.await.unwrap()))
 }
