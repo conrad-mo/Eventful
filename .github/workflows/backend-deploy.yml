@@ -18,12 +18,9 @@ jobs:
     - run: |
         cd backend
         touch src/keys.rs
-        echo 'pub const GPT_KEY: &str = "${{ secrets.GPT_KEY }}";' >> src/api.rs
-        echo 'pub const SHOPPING_SCRAPPER_KEY: &str = "${{ secrets.SHOPPING_SCRAPPER_KEY }}";' >> src/api.rs
-        cat src/api.rs
-        ls -a
-        cd src
-        ls -a
+        echo 'pub const GPT_KEY: &str = "${{ secrets.GPT_KEY }}";' >> src/keys.rs
+        echo 'pub const SHOPPING_SCRAPPER_KEY: &str = "${{ secrets.SHOPPING_SCRAPPER_KEY }}";' >> src/keys.rs
+        cat src/keys.rs
     - name: Set up Docker Buildx
       run: |
           cd backend
