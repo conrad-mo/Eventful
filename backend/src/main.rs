@@ -8,6 +8,8 @@ use axum::response::IntoResponse;
 use axum::routing::post;
 use tower_http::cors::{Any, CorsLayer};
 use crate::types::{OptimizePrompt, ItemsPrompt, gptcall, shoppingapicall};
+use reqwest::Error;
+use futures::future::join_all;
 
 
 #[tokio::main]
@@ -43,6 +45,7 @@ async fn items_gen(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
 }
 
 async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoResponse {
-    let response = shoppingapicall(String::from("Paper plates"));
-    (StatusCode::OK, Json(response.await.unwrap()))
+    let futures = join_all(request_data.items.iter().map(|item| async { shoppingapicall(item.to_string()).await.unwrap() })).await;
+
+    (StatusCode::OK, Json(futures))
 }

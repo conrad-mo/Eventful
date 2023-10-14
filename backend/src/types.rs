@@ -55,7 +55,7 @@ pub async fn gptcall(prompt: String) -> Result<String, Error>{
 }
 pub async fn shoppingapicall(item: String) -> Result<String, Error>{
     let client = reqwest::Client::new();
-    let response = client.get(format!("https://api.shoppingscraper.com/search/googleshopping/ca/?keyword={}&api_key={}&page=1&limit=50", item, keys::SHOPPING_SCRAPPER_KEY)).send().await?;
+    let response = client.get(format!("https://api.shoppingscraper.com/search/googleshopping/ca/?keyword={}&api_key={}&page=1&limit=10", item, keys::SHOPPING_SCRAPPER_KEY)).send().await?;
     let response_body = response.text().await?;
     println!("{:?}", response_body);
     Ok(response_body)
