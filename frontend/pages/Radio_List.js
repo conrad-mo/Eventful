@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View,Text} from "react-native";
-import { Button, } from "react-native-paper";
+import { Button, IconButton, TextInput} from "react-native-paper";
 import { CheckBox } from "react-native-elements";
+
 
 export default function RadioList(){
     let it = ['ahhhh','b','c','d','eeeeeeeeeee','f','gggg','h','i','jjjjjjjj'];
@@ -15,7 +16,7 @@ export default function RadioList(){
 
     let items = it.map((item)=> 
         <TouchableOpacity>
-            <View>
+            <View >
             <CheckBox
             backgroundcolor = '#FDECF0'
             center
@@ -33,8 +34,11 @@ export default function RadioList(){
             </View>
         </TouchableOpacity>
     );
+
     return (
-        <View style = {{flexDirection:"column", width: 350, marginTop:120, justifyContent :'center'}}>
+        <View style = {{marginTop:40}}>
+            <IconButton style = {{alignSelf:'flex-end'}} size = {32} icon="plus" />
+        <View style = {{flexDirection:"column", width: 350, justifyContent :'center'}}>
             <View style ={styles.textwrap}>
                 <View style = {{flexDirection:'row'}}>
                 <Text style = {{fontWeight: 600, fontSize : 28}} > Here's a </Text>
@@ -42,11 +46,13 @@ export default function RadioList(){
                </View>
                 <Text style = {{fontWeight: 600, fontSize : 28}}> we came up with </Text>
              </View>
-             <View style = {{height: 300}}>
-        <ScrollView contentContainerStyle = {styles.container}>
-            {items}
-        </ScrollView></View>
+            <View style = {{marginLeft:50,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
+                <ScrollView contentContainerStyle = {styles.container}>
+                    {items}
+                </ScrollView>
+            </View>
         <Button labelStyle = {styles.buttontext} style = {styles.button} mode = "contained">Optimize Cost!</Button>
+        </View>
         </View>
     )
 
@@ -59,12 +65,13 @@ const styles = StyleSheet.create({
         flexDirection : 'column',
         borderColor : '#303030',
         justifyContent: 'center',
-        marginLeft:45
+        
     },
     itembox :{
         flexDirection : 'row',
         backgroundColor :'#FDECF0', 
-        padding : 10, 
+        padding :5, 
+        height:80,
     },
     itemtext:{
         borderRadius:6,
@@ -89,10 +96,11 @@ const styles = StyleSheet.create({
         borderRadius:10
     },
     buttontext :{
-       
-    
         justifyContent : 'center',
         alignItems : 'center'
+    },
+    add:{
+        alignSelf:'flex-end'
     }
 }
 );
