@@ -7,8 +7,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::routing::post;
 use tower_http::cors::{Any, CorsLayer};
-use crate::types::{OptimizePrompt, ItemsPrompt, gptcall, shoppingapicall, OptimizedItem};
-use reqwest::Error;
+use crate::types::{OptimizePrompt, ItemsPrompt, gptcall, shoppingapicall, OptimizedItem, OptimizedItemGPT};
 use futures::future::join_all;
 
 
@@ -45,18 +44,59 @@ async fn items_gen(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
 }
 
 async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoResponse {
-    let items_costs = join_all(request_data.items.iter().map(|item| async { shoppingapicall(item.to_string()).await.unwrap() })).await;
+    let items_optimized: Vec<Vec<OptimizedItem>> = join_all(request_data.items.iter().map(|item| async { shoppingapicall(item.to_string()).await })).await;
     let formatted_items = format!("{:?}", request_data.items);
-    let formatted_costs = format!("{:?}", items_costs);
-    (StatusCode::OK, Json(items_costs))
-    // println!("Done grabbing shit");
-    // let prompt = format!("Given items \n {} \n and given multiple links and costs for ever item in the list above \n {} \n\
-    // for every item, return the item name from the original list, the cost and link to the option you found. The total cost for everything must fit inside budget of {} dollars and you should give me a list"
-    //     , formatted_items, formatted_costs, request_data.budget);
-    // let response = gptcall(prompt.to_string()).await;
-    // (StatusCode::OK, Json(response.unwrap()))
+    let formatted_costs = format!("{:?}", items_optimized);
+    println!("Done this so far");
+    let items_price = join_all(items_optimized.clone().iter().map(|item| async { price_dive(item.to_vec()).await })).await;
+    println!("{:?}", items_price);
+    println!("YESSIR");
+    let formatted_prices = format!("{:?}", items_price);
+    // (StatusCode::OK, Json(formatted_costs))
+    let prompt = format!("Given items \n {} \n and given multiple links and costs for ever item in the list above \n {} \n\
+    for every item, return the item name from the original list, the cost to the option you found. The total cost for everything must fit inside budget of {} dollars and you should return it in a format where the item name and its respective price is separated by a colon but every group of item name: price is separated by a comma. The format should contain 1 of each item.\
+    Please optimize for the total cost of all the items in the list to be as close to the budget as possible and to not just pick the cheapest items and do not exceed the budget. Do not have any text aside from the format requested. The json should not contain any excess characters too such as \\"
+        , formatted_items, formatted_prices, request_data.budget);
+    let response = gptcall(prompt.to_string()).await;
+    let output = response.unwrap();
+    let trimmed = trim_string(&output);
+    let parts = trimmed.split(", ");
+    let vector: Vec<String> = parts.map(String::from).collect::<Vec<String>>();
+    let sample: Vec<OptimizedItem> = vec![OptimizedItem{name: "Food".to_string(), item_link: "google.com".to_string(), cost: 6.99}, OptimizedItem{name: "backend".to_string(), item_link: "conrad_sad.com".to_string(), cost: 9999.01}];
+    (StatusCode::OK, Json(sample))
 }
 
-// async fn price_cleanup(response: Result<String, Error>) -> Vec<OptimizedItem>{
-//
-// }
+pub async fn price_dive (item_vec: Vec<OptimizedItem>) -> OptimizedItemGPT{
+    if item_vec.is_empty() {
+        return OptimizedItemGPT {
+            name: String::new(),
+            prices: Vec::new(),
+        };
+    }
+    let mut prices: Vec<f64> = Vec::new();
+    let name = &item_vec[0].name.clone();
+    for item in item_vec{
+        prices.push(item.cost);
+    }
+    OptimizedItemGPT{
+        name: name.to_string(),
+        prices,
+    }
+}
+
+fn trim_string(input: &str) -> &str {
+    let trimmed_start = input.chars().skip_while(|c| !c.is_ascii_alphanumeric()).collect::<String>();
+    let trimmed_end = input.chars().rev().skip_while(|c| !c.is_ascii_alphanumeric()).collect::<String>();
+
+    if let Some(first_alphanumeric) = trimmed_start.chars().next() {
+        if let Some(last_alphanumeric) = trimmed_end.chars().next() {
+            if trimmed_start.len() + trimmed_end.len() <= input.len() {
+                let start_idx = input.find(first_alphanumeric).unwrap();
+                let end_idx = input.rfind(last_alphanumeric).unwrap();
+                return &input[start_idx..end_idx + 1];
+            }
+        }
+    }
+
+    return input; // Return the original string if no alphanumeric characters are found.
+}
