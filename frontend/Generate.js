@@ -28,7 +28,7 @@ const Generate = ({ navigation }) => {
     const getContent = () => {
         if (isLoading) {
             <Text>Generating your items...</Text>
-            return <ActivityIndicator size="large" animating={true} color='#6750A4' />
+            return <ActivityIndicator size="large" animating={true} color='#EE4266' />
 
         }
         if (error) {

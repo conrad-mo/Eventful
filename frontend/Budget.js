@@ -23,7 +23,7 @@ const Budget = ({ navigation }) => {
     <StatusBar style="auto"/>
     <View style={styles.text}>
         <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 24 }}>
-            Give us a <Text style={{ fontWeight: 'bold', color: '#6750A4', fontSize: 24 }}>budget</Text> to work with.
+            Give us a <Text style={{ fontWeight: 'bold', color: '#EE4266', fontSize: 24 }}>budget</Text> to work with.
         </Text>
         <Searchbar style={{ backgroundColor: '#eaeaea', borderRadius: 4, top:20, borderColor: 'black', }}
             placeholder="Enter an event..."

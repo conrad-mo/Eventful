@@ -20,8 +20,8 @@ const HomeScreen = ({ navigation }) => {
         <StatusBar style="auto" />
         <Image source={require('./assets/first-page-image.png')} style={styles.logo} />
         <View style={styles.text}>
-          <Text>Start budgeting events with Appname</Text>
-
+          <Text  style={{ fontWeight: 'bold', color: 'black', fontSize: 24 }}>Start budgeting events {"\n          "} with Eventful</Text>
+        <Text style={{ marginTop: 30}}> Your Vision, Our Expertise, Every Budget.</Text>
         </View>
 
 
@@ -45,16 +45,17 @@ const styles = StyleSheet.create({
   customButton: {
     width: '85%',
     height: 40,
-    marginTop: 300,
+    marginTop: 200,
     color: 'black',
     borderRadius: 10,
     left:30
   },
   logo: {
-    width: '50%',
+    width: '75%',
     height: '50%',
+    resizeMode:'contain',
     top: 100,
-    left: 95,
+    left: '12.5%',
   },
 });
 
