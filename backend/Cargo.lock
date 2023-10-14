@@ -3,18 +3,6 @@
 version = 3
 
 [[package]]
-name = "Eventful"
-version = "0.1.0"
-dependencies = [
- "axum",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
- "tower-http",
-]
-
-[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -188,6 +176,18 @@ checksum = "ac3e13f66a2f95e32a39eaa81f6b95d42878ca0e1db0c7543723dfe12557e860"
 dependencies = [
  "libc",
  "windows-sys",
+]
+
+[[package]]
+name = "eventful"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower-http",
 ]
 
 [[package]]

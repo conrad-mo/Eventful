@@ -6,9 +6,8 @@ use std::net::SocketAddr;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::routing::post;
-use reqwest::header::{HeaderMap, HeaderValue};
 use tower_http::cors::{Any, CorsLayer};
-use crate::types::{OptimizePrompt, ItemsPrompt, GptData, GptMessage, gptcall};
+use crate::types::{OptimizePrompt, ItemsPrompt, gptcall};
 
 
 #[tokio::main]
@@ -35,6 +34,8 @@ async fn root() -> &'static str {
 }
 
 async fn items_gen(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
-    let whatever = gptcall(&request_data);
-    (StatusCode::OK, Json(whatever.await.unwrap()))
+
+    let prompt: String = format!("Give me a list of items for a {} event that are total under {} but do not give price, only a list of items separated by commas", request_data.event, request_data.budget);
+    let response = gptcall(prompt);
+    (StatusCode::OK, Json(response.await.unwrap()))
 }

@@ -26,10 +26,9 @@ pub struct GptMessage {
     pub(crate) content: String,
 }
 
-pub async fn gptcall(itemsprompt: &ItemsPrompt) -> Result<String, Error>{
+pub async fn gptcall(prompt: String) -> Result<String, Error>{
     let client = reqwest::Client::new();
-    let prompt = format!("whatever {} {}", itemsprompt.event, itemsprompt.budget);
-    let newmessages: GptMessage = GptMessage {role: format!("user"), content: format!("Give me a list of items for a party under 100 but do not give price, only a list of items separated by commas")};
+    let newmessages: GptMessage = GptMessage {role: format!("user"), content: prompt};
     let mut newvec = Vec::new();
     newvec.push(newmessages);
     let body = GptData {
