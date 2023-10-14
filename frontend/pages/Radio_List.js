@@ -212,9 +212,11 @@ const styles = StyleSheet.create({
         marginTop : 50,
         // marginLeft : 45,
         height : 40,
+        width: '90%',
+        left: '5%',
         backgroundColor : '#303030',
         justifyContent :'center',
-        borderRadius:10
+        borderRadius: 10
     },
     buttontext :{
         justifyContent : 'center',
