@@ -28,7 +28,7 @@ export default function RadioList(){
             checkedColor="#EE4266"
             checked={checked[it.indexOf(item)]}
             containerStyle = {styles.itembox}
-            textStyle = {fontSize = 28}
+            textStyle = {{fontSize: 20, fontWeight: 'normal'}}
             onPress={() => handleOnChange(it.indexOf(item))}
             />
             </View>
@@ -69,9 +69,11 @@ const styles = StyleSheet.create({
     },
     itembox :{
         flexDirection : 'row',
-        backgroundColor :'#FDECF0', 
-        padding :5, 
-        height:80,
+        backgroundColor :'rgba(238, 66, 102, 0.1)', 
+        padding: 5, 
+        paddingLeft: 20,
+        height: 60,
+        borderRadius: 2,
     },
     itemtext:{
         borderRadius:6,
