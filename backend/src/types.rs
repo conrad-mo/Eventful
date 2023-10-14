@@ -2,6 +2,8 @@ use reqwest::Error;
 use reqwest::header::{HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
 use crate::keys;
+use std::any::type_name;
+use serde_json::from_value;
 
 #[derive(Serialize, Deserialize)]
 pub struct ItemsPrompt {
@@ -26,10 +28,16 @@ pub struct GptMessage {
     pub(crate) content: String,
 }
 
-pub async fn gptcall(itemsprompt: &ItemsPrompt) -> Result<String, Error>{
+#[derive(Deserialize, Debug)]
+pub struct OptimizedItem{
+    pub name: String,
+    pub cost: f64,
+    pub item_link: String
+}
+
+pub async fn gptcall(prompt: String) -> Result<String, Error>{
     let client = reqwest::Client::new();
-    let prompt = format!("whatever {} {}", itemsprompt.event, itemsprompt.budget);
-    let newmessages: GptMessage = GptMessage {role: format!("user"), content: format!("Give me a list of items for a party under 100 but do not give price, only a list of items separated by commas")};
+    let newmessages: GptMessage = GptMessage {role: format!("user"), content: prompt};
     let mut newvec = Vec::new();
     newvec.push(newmessages);
     let body = GptData {
@@ -42,7 +50,7 @@ pub async fn gptcall(itemsprompt: &ItemsPrompt) -> Result<String, Error>{
     headers.insert("Content-Type", HeaderValue::from_static("application/json"));
     let response = client.post("https://api.openai.com/v1/chat/completions").headers(headers).json(&body).send().await?;
     let response_body = response.text().await?;
-    println!("{:?}", response_body);
+    //println!("{:?}", response_body);
     if !(response_body.is_empty()){
         let index1 = response_body.find("\"content\": \"");
         let indexone =  index1.unwrap() + 12;
@@ -53,4 +61,46 @@ pub async fn gptcall(itemsprompt: &ItemsPrompt) -> Result<String, Error>{
     else{
         Ok(String::from("Error"))
     }
+}
+pub async fn shoppingapicall(item_name: String) -> Result<String, Error>{
+    let mut itemvec: Vec<OptimizedItem> = Vec::new();
+    let client = reqwest::Client::new();
+    let response: reqwest::Response = client.get(format!("https://api.shoppingscraper.com/search/googleshopping/ca/?keyword={}&api_key={}&page=1&limit=10", item_name, keys::SHOPPING_SCRAPPER_KEY)).send().await?;
+    let data: serde_json::Value = response.json().await?;
+    let item_prices = data.get("shoppingscraper").unwrap().get("results").unwrap();
+    println!("{:?}", item_prices);
+    println!("{}", type_of(&item_prices));
+    if let Some(prices_array) = item_prices.as_array() {
+        for item in prices_array {
+            // Now you can access individual JSON objects
+            if let Some(link_json) = item.get("link") {
+                if let Ok(link) = from_value::<String>(link_json.clone()) {
+                    if let Some(price_json) = item.get("offers").unwrap().as_array().unwrap().get(0).unwrap().get("price"){
+                        if let Ok(price) = from_value::<f64>(price_json.clone()) {
+                            itemvec.push(OptimizedItem{name: item_name.clone(), cost: price, item_link: link.clone() });
+                            println!("Added one");
+                        }
+                        else{
+                            println!("{:?}", price_json);
+                            println!("Failed to deserialize the price into a String");
+                        }
+                    }
+                    else{
+                        println!("Failed to find price");
+                    }
+                } else {
+                    println!("Failed to deserialize the link into a String");
+                }
+            }
+        }
+    }
+    let formatted_vec = format!("{:?}", itemvec);
+    println!("{:?}", formatted_vec);
+    // let response_body = response.text().await?;
+    //println!("{:?}", response_body);
+    // Ok(response_body)
+    Ok("LMAOOO".to_string())
+}
+fn type_of<T>(_: T) -> &'static str {
+    type_name::<T>()
 }

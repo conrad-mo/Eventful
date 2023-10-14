@@ -1,20 +1,51 @@
 import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './HomeScreen.js';
+import ChooseEvent from './ChooseEvent.js';
+import Budget from './Budget.js';
+import Generate from './Generate.js';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChooseEvent"
+          component={ChooseEvent}
+          options={{ headerShown: false }}
+        />
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+        <Stack.Screen
+          name="Budget"
+          component={Budget}
+          options={{ headerShown: false }}
+        
+        />
+
+<Stack.Screen
+          name="Generate"
+          component={Generate}
+          options={{ headerShown: false }}
+        
+        />
+
+        
+
+
+        
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
