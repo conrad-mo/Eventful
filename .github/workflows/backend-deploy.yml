@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v3
     - run: |
         cd backend
-        touch src/api.rs
+        touch src/keys.rs
         echo 'pub const GPT_KEY: &str = "${{ secrets.GPT_KEY }}";' >> src/api.rs
         echo 'pub const SHOPPING_SCRAPPER_KEY: &str = "${{ secrets.SHOPPING_SCRAPPER_KEY }}";' >> src/api.rs
         cat src/api.rs
