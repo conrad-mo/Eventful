@@ -37,11 +37,13 @@ jobs:
 
     - name: Build and push Docker images
       run: |
+        cd backend
         docker buildx use eventful-builder
         docker buildx build --file Dockerfile --tag conradmo/eventful --push .
       shell: bash
     - name: Create SSH key
       run: |
+        cd backend
         mkdir -p ~/.ssh
         echo "$SSH_KEY" > key.pem
         sudo chmod 400 key.pem
@@ -53,6 +55,7 @@ jobs:
         IP: ${{secrets.EC2_IP}}
     - name: Ssh into AWS EC2 and update docker container
       run: |
+        cd backend
         ssh -i "key.pem" ubuntu@"$IP" sudo docker ps -a
         ssh -i "key.pem" ubuntu@"$IP" "sudo docker ps -a -q | xargs -I {} sudo docker stop {}"
         ssh -i "key.pem" ubuntu@"$IP" "sudo docker ps -a -q | xargs -I {} sudo docker rm {}"
