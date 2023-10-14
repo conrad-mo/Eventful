@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, View,Text} from "react-native";
-import { Button, IconButton, TextInput} from "react-native-paper";
+import { useState,useEffect} from "react";
+import { ScrollView, StyleSheet, TouchableOpacity, View,Text,Modal,} from "react-native";
+import { Button, IconButton, TextInput,ActivityIndicator} from "react-native-paper";
 import { CheckBox } from "react-native-elements";
-import { ActivityIndicator } from 'react-native-paper';
+
 
 
 export default function RadioList({navigation}){
-    // let it = ['ahhhh','b','c','d','eeeeeeeeeee','f','gggg','h','i','jjjjjjjj'];
     let [it, setIt] = useState([]);
     const [checked,setChecked] = useState(new Array(15).fill(false));
     let [isLoading, setIsLoading] = useState(true);
@@ -22,7 +21,7 @@ export default function RadioList({navigation}){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "event": "Birthday party",
+                    "event": "Birthday party under 10 items",
                     "budget": 50
                 }),
             });
@@ -73,7 +72,7 @@ export default function RadioList({navigation}){
     }
 
     let items = it.map((item,index)=> 
-        index < 10 ?
+        index < 10?
         <TouchableOpacity key = {item}>
             <View >
             <CheckBox
@@ -121,11 +120,12 @@ export default function RadioList({navigation}){
                 label="add item"
                 value={text}
                 onChangeText={text => setText(text)}
-                activeOutlineColor="#EE4266"/>
+                activeOutlineColor="#EE4266"
+                />
         </View>
             <Button onPress={()=>{
-                if(items.length < 10){
-                    items = [...items,<TouchableOpacity>
+                if(items.length < 30){
+                    items.push(<TouchableOpacity>
                         <View >
                         <CheckBox
                         backgroundcolor = '#FDECF0'
@@ -142,7 +142,8 @@ export default function RadioList({navigation}){
                         onPress={() => handleOnChange(it.indexOf(text))}
                         />
                         </View>
-                    </TouchableOpacity>]
+                    </TouchableOpacity>)
+                    console.log({items})
                 }
                 setVisibility(false)
                 }}> done!</Button>
