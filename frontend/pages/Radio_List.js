@@ -5,12 +5,16 @@ import { CheckBox } from "react-native-elements";
 
 
 
-export default function RadioList({navigation}){
+export default function RadioList({navigation, route}){
     let [it, setIt] = useState([]);
     const [checked,setChecked] = useState(new Array(15).fill(false));
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
+    const {eventName, searchQuery} = route.params;
+
+    console.log(typeof eventName);
+    console.log(typeof searchQuery);
 
     const getData = async () => {
         try {
@@ -21,11 +25,11 @@ export default function RadioList({navigation}){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "event": "Birthday party under 10 items",
-                    "budget": 50
+                    "event": "eventName",
+                    "budget": +searchQuery
                 }),
             });
-
+          
             const data = await result.json()
             console.log(data);
             setIt(data);
