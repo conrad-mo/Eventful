@@ -1,11 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View,Text} from "react-native";
 import { Button, } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
+import { ActivityIndicator } from 'react-native-paper';
 
-export default function RadioList(){
-    let it = ['ahhhh','b','c','d','eeeeeeeeeee','f','gggg','h','i','jjjjjjjj'];
-    const [checked,setChecked] = useState(new Array(it.length).fill(false));
+
+export default function RadioList({navigation}){
+    // let it = ['ahhhh','b','c','d','eeeeeeeeeee','f','gggg','h','i','jjjjjjjj'];
+    let [it, setIt] = useState([]);
+    const [checked,setChecked] = useState(new Array(15).fill(false));
+    let [isLoading, setIsLoading] = useState(true);
+    let [error, setError] = useState();
+    let [response, setResponse] = useState();
+
+    const getData = async () => {
+        try {
+            const result = await fetch('http://3.145.78.170:3000/generateitems', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "event": "Birthday party",
+                    "budget": 50
+                }),
+            });
+
+            const data = await result.json()
+            console.log(data);
+            setIt(data);
+            setIsLoading(false);
+            setResponse(data);
+        } catch (error) {
+            setIsLoading(false);
+            setError(error);
+        }
+    }
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const getContent = () =>{
+        if (isLoading) {
+            
+            return (
+                <View>
+                  <ActivityIndicator size="large" animating={true} color='#EE4266' />
+                  <Text style={{ marginTop: 20}}>Generating your items...</Text>
+                </View>
+              );
+
+        }
+
+        if (error) {
+            return <Text>{error}</Text>
+        }
+
+        if (!response) {
+            return <Text>Invalid response format</Text>;
+          }
+
+        return null;
+    }
+    
     const handleOnChange = (id) =>{
         const updatedChecked = checked.map((item, index) =>
         index === id ? !item : item
@@ -14,7 +73,7 @@ export default function RadioList(){
     }
 
     let items = it.map((item)=> 
-        <TouchableOpacity>
+        <TouchableOpacity key={item}>
             <View>
             <CheckBox
             backgroundcolor = '#FDECF0'
@@ -33,7 +92,11 @@ export default function RadioList(){
         </TouchableOpacity>
     );
     return (
-        <View style = {{flexDirection:"column", width: 350, marginTop:120, justifyContent :'center'}}>
+        <View  style={styles.loading}>
+            {getContent()}
+            {!isLoading && (
+            <View style = {{flexDirection:"column", width: 350, marginTop:120, justifyContent :'center'}}>
+            
             <View style ={styles.textwrap}>
                 <View style = {{flexDirection:'row'}}>
                 <Text style = {{fontWeight: 600, fontSize : 28}} > Here's a </Text>
@@ -44,14 +107,24 @@ export default function RadioList(){
              <View style = {{height: 300}}>
         <ScrollView contentContainerStyle = {styles.container}>
             {items}
-        </ScrollView></View>
-        <Button labelStyle = {styles.buttontext} style = {styles.button} mode = "contained">Optimize Cost!</Button>
+        </ScrollView>
+        </View>
+        <Button labelStyle = {styles.buttontext} style = {styles.button} mode = "contained" onPress={() => navigation.navigate('Generate')}>Optimize Cost!</Button>
+        </View>
+        )}
+        
         </View>
     )
 
     }
 
 const styles = StyleSheet.create({
+    
+    loading:{
+        flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    },
     container:{
         padding:10,
         backgroundcolor : '#FFFFFF',
