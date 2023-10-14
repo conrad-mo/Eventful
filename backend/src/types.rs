@@ -105,10 +105,15 @@ pub async fn shoppingapicall(item_name: String) -> Vec<OptimizedItem>{
                         else{
                             break;
                         }
-                        // Now you can access individual JSON objects
 
                     }
                 }
+                else{
+                    println!("Failed to unwrap array");
+                }
+            }
+            else{
+                println!("Failed to unwrap results");
             }
         }
         else{
