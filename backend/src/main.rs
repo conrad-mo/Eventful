@@ -46,7 +46,7 @@ async fn items_gen(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
 async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoResponse {
     let items_optimized: Vec<Vec<OptimizedItem>> = join_all(request_data.items.iter().map(|item| async { shoppingapicall(item.to_string()).await })).await;
     let formatted_items = format!("{:?}", request_data.items);
-    let formatted_costs = format!("{:?}", items_optimized);
+    let _formatted_costs = format!("{:?}", items_optimized);
     println!("Done this so far");
     let items_price = join_all(items_optimized.clone().iter().map(|item| async { price_dive(item.to_vec()).await })).await;
     println!("{:?}", items_price);
