@@ -60,10 +60,11 @@ async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoRe
     let response = gptcall(prompt.to_string()).await;
     let output = response.unwrap();
     let trimmed = trim_string(&output);
-    let parts = trimmed.split(", ");
+    println!("{}", trimmed);
+    let parts = trimmed[2..trimmed.len()-2].split(", ");
     let vector: Vec<String> = parts.map(String::from).collect::<Vec<String>>();
-    let sample: Vec<OptimizedItem> = vec![OptimizedItem{name: "Food".to_string(), item_link: "google.com".to_string(), cost: 6.99}, OptimizedItem{name: "backend".to_string(), item_link: "conrad_sad.com".to_string(), cost: 9999.01}];
-    (StatusCode::OK, Json(sample))
+    let finalvector = join_all(vector.iter().map(|item| async { link_dsdr(item.clone(), items_optimized.clone()).await })).await;
+    (StatusCode::OK, Json(finalvector))
 }
 
 pub async fn price_dive (item_vec: Vec<OptimizedItem>) -> OptimizedItemGPT{
@@ -97,6 +98,25 @@ fn trim_string(input: &str) -> &str {
             }
         }
     }
+    return input;
+}
 
-    return input; // Return the original string if no alphanumeric characters are found.
+async fn link_dsdr(nameandprice: String, items_vec: Vec<Vec<OptimizedItem>>) -> OptimizedItem{
+    let name: String = nameandprice[0..nameandprice.find(":").unwrap()].to_string();
+    let price: f64 = nameandprice[nameandprice.find(":").unwrap()+1..].to_string().parse::<f64>().unwrap();
+    for vectors in items_vec{
+        for elements in vectors{
+            if elements.name != name{
+                break;
+            }
+            if elements.cost == price{
+                return OptimizedItem{
+                    name,
+                    cost: price,
+                    item_link: elements.item_link,
+                };
+            }
+        }
+    }
+    return OptimizedItem{name: "".to_string(), cost: 0.0, item_link: "".to_string()};
 }
