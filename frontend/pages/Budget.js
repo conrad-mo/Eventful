@@ -30,11 +30,11 @@ const Budget = ({ navigation }) => {
             onChangeText={onChangeSearch}
             value={searchQuery}
         />
-        <Button mode="contained" onPress={() => navigation.navigate('Generate')} style={styles.whiteButton}
-            labelStyle={{ textAlign: 'center', color: 'white', }} contentStyle={{ backgroundColor: 'black', }} title="Next">Next
+        <Button mode="contained" onPress={() => navigation.navigate('Radio_List')} style={styles.whiteButton}
+            labelStyle={{ textAlign: 'center', color: 'white', }} contentStyle={{ backgroundColor: 'black', }} title="Next">Find a list of items
         </Button>
         <Button mode="contained" onPress={() => navigation.navigate('ChooseEvent')} style={styles.blackButton}
-            labelStyle={{ textAlign: 'center', color: 'black',}} contentStyle={{ backgroundColor: 'white' }} title="Back">Find a list of items
+            labelStyle={{ textAlign: 'center', color: 'black',}} contentStyle={{ backgroundColor: 'white' }} title="Back">Back
         </Button>
     </View>
 </PaperProvider>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     whiteButton: {
         width: '85%',
         height: 40,
-        marginTop: 270,
+        marginTop: 340,
         borderRadius: 10,
         left: 30
     },

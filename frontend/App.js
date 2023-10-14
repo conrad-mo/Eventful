@@ -13,9 +13,8 @@ const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <RadioList/>
-    /*<NavigationContainer>
-      <Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="HomeScreen">
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
@@ -34,6 +33,12 @@ const App = () => {
         
         />
 
+        <Stack.Screen
+        name = "Radio_List"
+        component = {RadioList}
+        options={{ headerShown: false }}
+
+        />
 <Stack.Screen
           name="Generate"
           component={Generate}
@@ -46,7 +51,7 @@ const App = () => {
 
         
       </Stack.Navigator>
-    </NavigationContainer>*/
+    </NavigationContainer>
   );
 };
 
