@@ -45,7 +45,7 @@ const App = () => {
 
         
       </Stack.Navigator>
-    </NavigationContainer>*/
+    </NavigationContainer>
   );
 };
 
