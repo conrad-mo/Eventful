@@ -80,36 +80,39 @@ pub async fn shoppingapicall(item_name: String) -> Vec<OptimizedItem>{
         let response= client.get(format!("https://api.shoppingscraper.com/search/googleshopping/ca/?keyword={}&api_key={}&page=1&limit=10", item_name, keys::SHOPPING_SCRAPPER_KEY)).send().await;
         let response_read = response.unwrap();
         let data: serde_json::Value = response_read.json().await.unwrap();
-        let item_prices = data.get("shoppingscraper").unwrap().get("results").unwrap();
-        //println!("{:?}", item_prices);
-        //println!("{}", type_of(&item_prices));
-        if let Some(prices_array) = item_prices.as_array() {
-            for item in prices_array {
-                if itemvec.len() < 10{
-                    if let Some(link_json) = item.get("link") {
-                        if let Ok(link) = from_value::<String>(link_json.clone()) {
-                            if let Some(price_json) = item.get("offers").unwrap().as_array().unwrap().get(0).unwrap().get("price"){
-                                if let Ok(price) = from_value::<f64>(price_json.clone()) {
-                                    itemvec.push(OptimizedItem{name: item_name.clone(), cost: price, item_link: link.clone() });
+        if let Some(shoppingscraper) = data.get("shoppingscraper") {
+            let item_prices = shoppingscraper.get("results").unwrap();
+            if let Some(prices_array) = item_prices.as_array() {
+                for item in prices_array {
+                    if itemvec.len() < 10{
+                        if let Some(link_json) = item.get("link") {
+                            if let Ok(link) = from_value::<String>(link_json.clone()) {
+                                if let Some(price_json) = item.get("offers").unwrap().as_array().unwrap().get(0).unwrap().get("price"){
+                                    if let Ok(price) = from_value::<f64>(price_json.clone()) {
+                                        itemvec.push(OptimizedItem{name: item_name.clone(), cost: price, item_link: link.clone() });
+                                    }
+                                    else{
+                                        println!("Failed to deserialize the price into a String");
+                                    }
                                 }
                                 else{
-                                    println!("Failed to deserialize the price into a String");
+                                    println!("Failed to find price");
                                 }
+                            } else {
+                                println!("Failed to deserialize the link into a String");
                             }
-                            else{
-                                println!("Failed to find price");
-                            }
-                        } else {
-                            println!("Failed to deserialize the link into a String");
                         }
                     }
-                }
-                else{
-                    break;
-                }
-                // Now you can access individual JSON objects
+                    else{
+                        break;
+                    }
+                    // Now you can access individual JSON objects
 
+                }
             }
+        }
+        else{
+            println!("Recalling api");
         }
     }
 

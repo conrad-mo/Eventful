@@ -102,6 +102,7 @@ fn trim_string(input: &str) -> &str {
 }
 
 async fn link_dsdr(nameandprice: String, items_vec: Vec<Vec<OptimizedItem>>) -> OptimizedItem{
+    println!("{}", nameandprice);
     let name: String = nameandprice[0..nameandprice.find(":").unwrap()].to_string();
     let price: f64 = nameandprice[nameandprice.find(":").unwrap()+1..].to_string().parse::<f64>().unwrap();
     for vectors in items_vec{
