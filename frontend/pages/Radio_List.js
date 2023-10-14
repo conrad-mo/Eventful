@@ -24,6 +24,7 @@ export default function RadioList(){
             right
             checkedIcon='dot-circle-o'
             uncheckedIcon='circle-o'
+            checkedColor="#EE4266"
             checked={checked[it.indexOf(item)]}
             containerStyle = {styles.itembox}
             textStyle = {fontSize = 28}
@@ -56,7 +57,9 @@ const styles = StyleSheet.create({
         padding:10,
         backgroundcolor : '#FFFFFF',
         flexDirection : 'column',
-        borderColor : '#303030'
+        borderColor : '#303030',
+        justifyContent: 'center',
+        marginLeft:45
     },
     itembox :{
         flexDirection : 'row',
@@ -73,17 +76,21 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         marginTop : 50,
         marginBottom : 50,
-        marginLeft : 35
+        marginLeft : 45
         
     },
     button : {
         marginBottom : 50,
         marginTop : 50,
+        marginLeft : 45,
         height : 40,
+        backgroundColor : '#303030',
+        justifyContent :'center',
+        borderRadius:10
     },
     buttontext :{
-        padding : 3,
-        fontSize : 20,
+       
+    
         justifyContent : 'center',
         alignItems : 'center'
     }

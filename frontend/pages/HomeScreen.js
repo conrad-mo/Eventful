@@ -18,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
     <PaperProvider theme={paperTheme}>
 
         <StatusBar style="auto" />
-        <Image source={require('./assets/first-page-image.png')} style={styles.logo} />
+        <Image source={require('../assets/first-page-image.png')} style={styles.logo} />
         <View style={styles.text}>
           <Text  style={{ fontWeight: 'bold', color: 'black', fontSize: 24 }}>Start budgeting events {"\n          "} with Eventful</Text>
         <Text style={{ marginTop: 30}}> Your Vision, Our Expertise, Every Budget.</Text>
