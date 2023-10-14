@@ -36,5 +36,5 @@ async fn root() -> &'static str {
 
 async fn items_gen(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
     let whatever = gptcall(&request_data);
-    (StatusCode::OK, Json(whatever))
+    (StatusCode::OK, Json(whatever.await.unwrap()))
 }
