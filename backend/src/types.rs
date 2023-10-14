@@ -28,11 +28,11 @@ pub struct GptMessage {
     pub(crate) content: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct OptimizedItem{
     pub name: String,
     pub cost: f64,
-    pub link: String
+    pub item_link: String
 }
 
 pub async fn gptcall(prompt: String) -> Result<String, Error>{
@@ -62,9 +62,10 @@ pub async fn gptcall(prompt: String) -> Result<String, Error>{
         Ok(String::from("Error"))
     }
 }
-pub async fn shoppingapicall(item: String) -> Result<String, Error>{
+pub async fn shoppingapicall(item_name: String) -> Result<String, Error>{
+    let mut itemvec: Vec<OptimizedItem> = Vec::new();
     let client = reqwest::Client::new();
-    let response: reqwest::Response = client.get(format!("https://api.shoppingscraper.com/search/googleshopping/ca/?keyword={}&api_key={}&page=1&limit=10", item, keys::SHOPPING_SCRAPPER_KEY)).send().await?;
+    let response: reqwest::Response = client.get(format!("https://api.shoppingscraper.com/search/googleshopping/ca/?keyword={}&api_key={}&page=1&limit=10", item_name, keys::SHOPPING_SCRAPPER_KEY)).send().await?;
     let data: serde_json::Value = response.json().await?;
     let item_prices = data.get("shoppingscraper").unwrap().get("results").unwrap();
     println!("{:?}", item_prices);
@@ -74,13 +75,27 @@ pub async fn shoppingapicall(item: String) -> Result<String, Error>{
             // Now you can access individual JSON objects
             if let Some(link_json) = item.get("link") {
                 if let Ok(link) = from_value::<String>(link_json.clone()) {
-                    println!("{}", link);
+                    if let Some(price_json) = item.get("offers").unwrap().as_array().unwrap().get(0).unwrap().get("price"){
+                        if let Ok(price) = from_value::<f64>(price_json.clone()) {
+                            itemvec.push(OptimizedItem{name: item_name.clone(), cost: price, item_link: link.clone() });
+                            println!("Added one");
+                        }
+                        else{
+                            println!("{:?}", price_json);
+                            println!("Failed to deserialize the price into a String");
+                        }
+                    }
+                    else{
+                        println!("Failed to find price");
+                    }
                 } else {
-                    println!("Failed to deserialize the name into a String");
+                    println!("Failed to deserialize the link into a String");
                 }
             }
         }
     }
+    let formatted_vec = format!("{:?}", itemvec);
+    println!("{:?}", formatted_vec);
     // let response_body = response.text().await?;
     //println!("{:?}", response_body);
     // Ok(response_body)
