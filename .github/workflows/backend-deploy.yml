@@ -1,0 +1,61 @@
+name: Docker Image CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - run: |
+        cd backend
+        touch src/api.rs
+        echo 'pub const GPT_KEY: &str = "${{ secrets.GPT_KEY }}";' >> src/api.rs
+        echo 'pub const SHOPPING_SCRAPPER_KEY: &str = "${{ secrets.SHOPPING_SCRAPPER_KEY }}";' >> src/api.rs
+        cat src/api.rs
+    - name: Set up Docker Buildx
+      run: |
+          docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t conradmo/eventful .
+          docker run --rm --privileged tonistiigi/binfmt --install all
+          docker buildx create --use --name eventful-builder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement security.insecure' --use
+          docker buildx inspect eventful-builder --bootstrap
+      shell: bash
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker images
+      run: |
+        docker buildx use eventful-builder
+        docker buildx build --file Dockerfile --tag conradmo/eventful --push .
+      shell: bash
+    - name: Create SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_KEY" > key.pem
+        sudo chmod 400 key.pem
+        ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts
+        chmod 644 ~/.ssh/known_hosts
+      shell: bash
+      env:
+        SSH_KEY: ${{secrets.SSHKEY}}
+        IP: ${{secrets.EC2_IP}}
+    - name: Ssh into AWS EC2 and update docker container
+      run: |
+        ssh -i "key.pem" ubuntu@"$IP" sudo docker ps -a
+        ssh -i "key.pem" ubuntu@"$IP" "sudo docker ps -a -q | xargs -I {} sudo docker stop {}"
+        ssh -i "key.pem" ubuntu@"$IP" "sudo docker ps -a -q | xargs -I {} sudo docker rm {}"
+        ssh -i "key.pem" ubuntu@"$IP" sudo docker pull conradmo/eventful
+        ssh -i "key.pem" ubuntu@"$IP" sudo docker run -d -p 3000:3000 conradmo/eventful
+      env:
+        IP: ${{secrets.EC2_IP}}
