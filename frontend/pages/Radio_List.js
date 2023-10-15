@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState,useEffect,useCallback} from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Modal, } from "react-native";
 import { Button, IconButton, TextInput, ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
+
 
 
 
@@ -13,6 +14,7 @@ export default function RadioList({ navigation, route }) {
     let [response, setResponse] = useState();
     let [checkClicked,setCheckedClicked] = useState(false);
         const { eventName, searchQuery } = route.params;
+    let [ChosenArray, setChosenArray] = useState([]);
     const trueIndices = [];
     const trueElements = [];
 
@@ -41,6 +43,10 @@ export default function RadioList({ navigation, route }) {
             setError(error);
         }
     }
+
+    useEffect(() => {
+        console.log("Response from above", response);
+      }, [response]);
 
     useEffect(() => {
         getData();
@@ -72,44 +78,6 @@ export default function RadioList({ navigation, route }) {
 
         return null;
     }
-
-    
-
-    const handleOnChange = (id) => {
-        const updatedChecked = checked.map((item, index) =>
-            index === id ? !item : item
-            
-        );
-        setChecked(updatedChecked);
-    }
-
-
-    let items = it.map((item, index) =>
-        index < 10 ?
-            <TouchableOpacity key={item}>
-                <View >
-                    <CheckBox
-                        backgroundcolor='#FDECF0'
-                        center
-                        title={item}
-                        size={26}
-                        right
-                        checkedIcon='dot-circle-o'
-                        uncheckedIcon='circle-o'
-                        checkedColor="#EE4266"
-                        checked={checked[it.indexOf(item)]}
-                        containerStyle={styles.itembox}
-                        textStyle={{ fontSize: 20, fontWeight: 'normal' }}
-                        onPress={() => {
-                            handleOnChange(it.indexOf(item))
-                        }}
-
-                    />
-
-                </View>
-            </TouchableOpacity> : ""
-    );
-
     const chosen = (checked, it) => {
         
         for (let i = 0; i < checked.length; i++) {
@@ -130,14 +98,41 @@ export default function RadioList({ navigation, route }) {
     }, [checked]);
    
 
-    const [visibility, setVisibility] = useState(false);
-    const [text, setText] = useState("");
+    
+    const handleOnChange = (id) => {
+        const newChecked = [...checked];
+        newChecked[id] = !newChecked[id]; // Toggle the checkbox state
+        setChecked(newChecked);
+      };
+
+    const itemsArray = it.map((item, index) => (
+        <TouchableOpacity key={index}>
+          <View>
+          <CheckBox
+        backgroundcolor = '#FDECF0'
+        center
+        title={item}
+        size={26}
+        right
+        checkedColor="#EE4266"
+        checked={checked[index]}
+        containerStyle = {styles.itembox}
+        textStyle = {{fontSize: 20, fontWeight: 'normal'}}
+        onPress={() => handleOnChange(index)}
+        />
+        </View>
+        </TouchableOpacity>
+      ));
+      const allitems = itemsArray.slice(0,10)
+      let [items,setItems] = useState(allitems);  
+      const [visibility,setVisibility] = useState(false);
+      const [text, setText] = useState("");
     return (
         <View style={styles.loading}>
-            {getContent()}
+             {getContent()}
             {!isLoading && (
                 <View>
-             <IconButton style = {{alignSelf:'flex-end'}} size = {32} icon="plus" onPress = {()=>{
+            <IconButton style = {{alignSelf:'flex-end'}} size = {32} icon="plus" onPress = {()=>{
                 setVisibility(true);
                 setItems(checkClicked ? items : allitems);
             }}/>
@@ -205,7 +200,7 @@ export default function RadioList({ navigation, route }) {
                     
                 </ScrollView>
             </View>
-        <Button labelStyle = {styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements, budget: searchQuery})} style = {styles.button} mode = "contained">Optimize Cost!</Button>
+            <Button labelStyle={styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements, budget: searchQuery})} style={styles.button} mode="contained">Optimize Cost!</Button>
         </View>
         </View>
             )}
