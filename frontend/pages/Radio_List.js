@@ -1,17 +1,19 @@
-import { useState,useEffect} from "react";
+import { useState,useEffect, useCallback} from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View,Text,Modal,} from "react-native";
 import { Button, IconButton, TextInput,ActivityIndicator} from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 
 
 
+
 export default function RadioList({navigation}){
     let [it, setIt] = useState([]);
-    const [checked,setChecked] = useState(new Array(15).fill(false));
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
-
+    let [checkClicked,setCheckedClicked] = useState(false);
+    const [checked,setChecked] = useState(new Array(15).fill(false));
+    
     const getData = async () => {
         try {
             const result = await fetch('http://3.145.78.170:3000/generateitems', {
@@ -27,7 +29,7 @@ export default function RadioList({navigation}){
             });
 
             const data = await result.json()
-            console.log(data);
+            console.log("good data"+ data);
             setIt(data);
             setIsLoading(false);
             setResponse(data);
@@ -38,12 +40,15 @@ export default function RadioList({navigation}){
     }
 
     useEffect(() => {
+        console.log("Response from above", response);
+      }, [response]);
+
+    useEffect(() => {
         getData();
     }, []);
 
     const getContent = () =>{
         if (isLoading) {
-            
             return (
                 <View>
                   <ActivityIndicator size="large" animating={true} color='#EE4266' />
@@ -64,44 +69,43 @@ export default function RadioList({navigation}){
         return null;
     }
     
-    const handleOnChange = (id) =>{
-        const updatedChecked = checked.map((item, index) =>
-        index === id ? !item : item
-        );
-        setChecked(updatedChecked);
-    }
+    
+    const handleOnChange = (id) => {
+        const newChecked = [...checked];
+        newChecked[id] = !newChecked[id]; // Toggle the checkbox state
+        setChecked(newChecked);
+      };
 
-    let items = it.map((item,index)=> 
-        index < 10?
-        <TouchableOpacity key = {item}>
-            <View >
-            <CheckBox
-            backgroundcolor = '#FDECF0'
-            center
-            title={item}
-            size={26}
-            right
-            checkedIcon='dot-circle-o'
-            uncheckedIcon='circle-o'
-            checkedColor="#EE4266"
-            checked={checked[it.indexOf(item)]}
-            containerStyle = {styles.itembox}
-            textStyle = {{fontSize: 20, fontWeight: 'normal'}}
-            onPress={() => handleOnChange(it.indexOf(item))}
-            />
-            </View>
-        </TouchableOpacity> : ""
-    );
-
-   const [visibility,setVisibility] = useState(false);
-   const [text, setText] = useState("");
+    const itemsArray = it.map((item, index) => (
+        <TouchableOpacity key={index}>
+          <View>
+          <CheckBox
+        backgroundcolor = '#FDECF0'
+        center
+        title={item}
+        size={26}
+        right
+        checkedColor="#EE4266"
+        checked={checked[index]}
+        containerStyle = {styles.itembox}
+        textStyle = {{fontSize: 20, fontWeight: 'normal'}}
+        onPress={() => handleOnChange(index)}
+        />
+        </View>
+        </TouchableOpacity>
+      ));
+      const allitems = itemsArray.slice(0,10)
+      let [items,setItems] = useState(allitems);  
+      const [visibility,setVisibility] = useState(false);
+      const [text, setText] = useState("");
     return (
-        <View   style={styles.loading}>
+        <View style={styles.loading}>
              {getContent()}
             {!isLoading && (
                 <View>
             <IconButton style = {{alignSelf:'flex-end'}} size = {32} icon="plus" onPress = {()=>{
                 setVisibility(true);
+                setItems(checkClicked ? items : allitems);
             }}/>
             <Modal
             animationType="slide" 
@@ -123,9 +127,13 @@ export default function RadioList({navigation}){
                 activeOutlineColor="#EE4266"
                 />
         </View>
-            <Button onPress={()=>{
-                if(items.length < 30){
-                    items.push(<TouchableOpacity>
+            <Button style= {{fontSize:24}}textColor = '#EE4266' onPress={()=>{
+                
+                console.log({items})
+                if(items.length < 11){
+                    setIt([...it,text])
+                    setChecked([...checked,false])
+                    setItems([...items,<TouchableOpacity>
                         <View >
                         <CheckBox
                         backgroundcolor = '#FDECF0'
@@ -133,19 +141,19 @@ export default function RadioList({navigation}){
                         title={text}
                         size={26}
                         right
-                        checkedIcon='dot-circle-o'
-                        uncheckedIcon='circle-o'
                         checkedColor="#EE4266"
-                        checked={checked[it.indexOf(text)]}
+                        checked={checked[checked.length-1]}
                         containerStyle = {styles.itembox}
-                        textStyle = {fontSize = 28}
-                        onPress={() => handleOnChange(it.indexOf(text))}
+                        textStyle = {{fontSize: 20, fontWeight: 'normal'}}
+                        onPress={() => handleOnChange(checked.length-1)}
                         />
                         </View>
-                    </TouchableOpacity>)
-                    console.log({items})
+                    </TouchableOpacity>])
+                    console.log(items.length)
+                   
                 }
                 setVisibility(false)
+                setCheckedClicked(true);
                 }}> done!</Button>
         </Modal>
     
@@ -159,7 +167,8 @@ export default function RadioList({navigation}){
              </View>
             <View style = {{marginLeft:0,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
                 <ScrollView contentContainerStyle = {styles.container}>
-                    {items}
+                    {!checkClicked? allitems:items}
+                    
                 </ScrollView>
             </View>
         <Button labelStyle = {styles.buttontext} onPress={() => navigation.navigate('Generate')} style = {styles.button} mode = "contained">Optimize Cost!</Button>
