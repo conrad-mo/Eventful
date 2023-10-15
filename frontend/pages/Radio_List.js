@@ -11,7 +11,8 @@ export default function RadioList({ navigation, route }) {
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
-    const { eventName, searchQuery } = route.params;
+    let [checkClicked,setCheckedClicked] = useState(false);
+        const { eventName, searchQuery } = route.params;
     const trueIndices = [];
     const trueElements = [];
 
@@ -136,69 +137,77 @@ export default function RadioList({ navigation, route }) {
             {getContent()}
             {!isLoading && (
                 <View>
-                    <IconButton style={{ alignSelf: 'flex-end' }} size={32} icon="plus" onPress={() => {
-                        setVisibility(true);
-                    }} />
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={visibility}
-                        onDismiss={() => { setVisibility(false) }}
-                        onRequestClose={() => {
-                            Alert.alert('Modal has been closed.');
-                            setVisibility(false);
-                        }}>
-                        <View>
-                            <TextInput
-                                clearButtonMode="always"
-                                mode="outlined"
-                                style={styles.centeredView}
-                                label="add item"
-                                value={text}
-                                onChangeText={text => setText(text)}
-                                activeOutlineColor="#EE4266" />
+             <IconButton style = {{alignSelf:'flex-end'}} size = {32} icon="plus" onPress = {()=>{
+                setVisibility(true);
+                setItems(checkClicked ? items : allitems);
+            }}/>
+            <Modal
+            animationType="slide" 
+            transparent = {true}
+            visible={visibility}
+            onDismiss={()=>{setVisibility(false)}}
+            onRequestClose={() => {
+             Alert.alert('Modal has been closed.');
+            setVisibility(false);
+        }}>
+         <View>
+            <TextInput
+                clearButtonMode="always"
+                mode="outlined"
+                style = {styles.centeredView}
+                label="add item"
+                value={text}
+                onChangeText={text => setText(text)}
+                activeOutlineColor="#EE4266"
+                />
+        </View>
+            <Button style= {{fontSize:24}}textColor = '#EE4266' onPress={()=>{
+                
+                console.log({items})
+                if(items.length < 11){
+                    setIt([...it,text])
+                    setChecked([...checked,false])
+                    setItems([...items,<TouchableOpacity>
+                        <View >
+                        <CheckBox
+                        backgroundcolor = '#FDECF0'
+                        center
+                        title={text}
+                        size={26}
+                        right
+                        checkedColor="#EE4266"
+                        checked={checked[checked.length-1]}
+                        containerStyle = {styles.itembox}
+                        textStyle = {{fontSize: 20, fontWeight: 'normal'}}
+                        onPress={() => handleOnChange(checked.length-1)}
+                        />
                         </View>
-                        <Button onPress={() => {
-                            if (items.length < 10) {
-                                items = [...items, <TouchableOpacity>
-                                    <View >
-                                        <CheckBox
-                                            backgroundcolor='#FDECF0'
-                                            center
-                                            title={text}
-                                            size={26}
-                                            right
-                                            checkedIcon='dot-circle-o'
-                                            uncheckedIcon='circle-o'
-                                            checkedColor="#EE4266"
-                                            checked={checked[it.indexOf(text)]}
-                                            containerStyle={styles.itembox}
-                                            textStyle={fontSize = 28}
-                                            onPress={() => handleOnChange(it.indexOf(text))}
-                                        />
-                                    </View>
-                                </TouchableOpacity>]
-                            }
-                            setVisibility(false)
-                        }}> done!</Button>
-                    </Modal>
-
-                    <View style={{ flexDirection: "column", width: 350, justifyContent: 'center' }}>
-                        <View style={styles.textwrap}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ fontWeight: 600, fontSize: 28 }} > Here's a </Text>
-                                <Text style={{ fontWeight: 600, fontSize: 28, color: '#EE4266' }}> list of Items</Text>
-                            </View>
-                            <Text style={{ fontWeight: 600, fontSize: 28 }}> we came up with </Text>
-                        </View>
-                        <View style={{ marginLeft: 0, marginBottom: 50, alignSelf: 'center', height: 300, width: '110%' }}>
-                            <ScrollView contentContainerStyle={styles.container}>
-                                {items}
-                            </ScrollView>
-                        </View>
-                        <Button labelStyle={styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements, budget: searchQuery})} style={styles.button} mode="contained">Optimize Cost!</Button>
-                    </View>
-                </View>
+                    </TouchableOpacity>])
+                    console.log(items.length)
+                   
+                }
+                setVisibility(false)
+                setCheckedClicked(true);
+                }}> done!</Button>
+        </Modal>
+    
+        <View style = {{flexDirection:"column", width: 350, justifyContent :'center'}}>
+            <View style ={styles.textwrap}>
+                <View style = {{flexDirection:'row'}}>
+                <Text style = {{fontWeight: 600, fontSize : 28}} > Here's a </Text>
+                <Text style = {{fontWeight: 600, fontSize : 28,color :'#EE4266' }}> list of Items</Text>
+               </View>
+                <Text style = {{fontWeight: 600, fontSize : 28}}> we came up with </Text>
+             </View>
+            <View style = {{marginLeft:0,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
+                <ScrollView contentContainerStyle = {styles.container}>
+                    {!checkClicked? allitems:items}
+                    
+                </ScrollView>
+            </View>
+        <Button labelStyle = {styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements, budget: searchQuery})} style = {styles.button} mode = "contained">Optimize Cost!</Button>
+        </View>
+        </View>
             )}
         </View>
     )

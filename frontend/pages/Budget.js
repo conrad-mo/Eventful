@@ -25,7 +25,7 @@ const Budget = ({ navigation, route }) => {
                 <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 24 }}>
                     Give us a <Text style={{ fontWeight: 'bold', color: '#EE4266', fontSize: 24 }}>budget</Text> to work with
                 </Text>
-                <Searchbar style={{ backgroundColor: '#eaeaea', borderRadius: 4, top: 20, borderColor: 'black', }}
+                <Searchbar icon = 'cash-multiple' style={{ backgroundColor: '#eaeaea', borderRadius: 4, top: 20, borderColor: 'black', }}
                     placeholder="Enter a budget..."
                     onChangeText={onChangeSearch}
                     value={searchQuery}
