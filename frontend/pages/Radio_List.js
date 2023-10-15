@@ -13,8 +13,7 @@ export default function RadioList({ navigation, route }) {
     let [error, setError] = useState();
     let [response, setResponse] = useState();
     let [checkClicked,setCheckedClicked] = useState(false);
-        const { eventName, searchQuery } = route.params;
-    let [ChosenArray, setChosenArray] = useState([]);
+    const { eventName, searchQuery } = route.params;
     const trueIndices = [];
     const trueElements = [];
 
@@ -101,7 +100,7 @@ export default function RadioList({ navigation, route }) {
     
     const handleOnChange = (id) => {
         const newChecked = [...checked];
-        newChecked[id] = !newChecked[id]; // Toggle the checkbox state
+        newChecked[id] = !newChecked[id];
         setChecked(newChecked);
       };
 
@@ -162,7 +161,7 @@ export default function RadioList({ navigation, route }) {
                 if(items.length < 11){
                     setIt([...it,text])
                     setChecked([...checked,false])
-                    setItems([...items,<TouchableOpacity>
+                    setItems([...items,<TouchableOpacity key={checked.length-1}>
                         <View >
                         <CheckBox
                         backgroundcolor = '#FDECF0'
