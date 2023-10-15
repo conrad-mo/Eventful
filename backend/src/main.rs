@@ -54,7 +54,7 @@ async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoRe
     let formatted_prices = format!("{:?}", items_price);
     // (StatusCode::OK, Json(formatted_costs))
     let prompt = format!("Given items \n {} \n and given multiple links and costs for ever item in the list above \n {} \n\
-    for every item, return the item name from the original list, the cost to the option you found. The total cost for everything must fit inside budget of {} dollars and you should return it in a format where the item name and its respective price is separated by a colon but every group of item name: price is separated by a comma. The format should contain 1 of each item.\
+    for every item, return the item name from the original list, the cost to the option you found. The total cost for everything must fit inside budget of {} dollars and you should return it in a format where the item name and its respective price is separated by a colon but every group of item name: price is separated by a comma without space after and singular space after the comma. The format should contain 1 of each item.\
     Please optimize for the total cost of all the items in the list to be as close to the budget as possible and to not just pick the cheapest items and do not exceed the budget. Do not have any text aside from the format requested. The json should not contain any excess characters too such as \\"
         , formatted_items, formatted_prices, request_data.budget);
     let response = gptcall(prompt.to_string()).await;
@@ -104,6 +104,7 @@ fn trim_string(input: &str) -> &str {
 async fn link_dsdr(nameandprice: String, items_vec: Vec<Vec<OptimizedItem>>) -> OptimizedItem{
     println!("{}", nameandprice);
     let name: String = nameandprice[0..nameandprice.find(":").unwrap()].to_string();
+    println!("If error out: here it is: {}", nameandprice[nameandprice.find(":").unwrap()+1..].to_string());
     let price: f64 = nameandprice[nameandprice.find(":").unwrap()+1..].to_string().parse::<f64>().unwrap();
     for vectors in items_vec{
         for elements in vectors{

@@ -46,11 +46,12 @@ const styles = StyleSheet.create({
     container:{
         backgroundColor: 'white',
     },
+
     text: {
         top: 200,
         padding: 30,
-
     },
+
     whiteButton: {
         width: '85%',
         height: 40,
