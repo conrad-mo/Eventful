@@ -46,7 +46,7 @@ async fn items_gen(Json(request_data): Json<ItemsPrompt>) -> impl IntoResponse {
 async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoResponse {
     let items_optimized: Vec<Vec<OptimizedItem>> = join_all(request_data.items.iter().map(|item| async { shoppingapicall(item.to_string()).await })).await;
     let formatted_items = format!("{:?}", request_data.items);
-    let formatted_costs = format!("{:?}", items_optimized);
+    let _formatted_costs = format!("{:?}", items_optimized);
     println!("Done this so far");
     let items_price = join_all(items_optimized.clone().iter().map(|item| async { price_dive(item.to_vec()).await })).await;
     println!("{:?}", items_price);
@@ -54,16 +54,17 @@ async fn optimize_items(Json(request_data): Json<OptimizePrompt>) -> impl IntoRe
     let formatted_prices = format!("{:?}", items_price);
     // (StatusCode::OK, Json(formatted_costs))
     let prompt = format!("Given items \n {} \n and given multiple links and costs for ever item in the list above \n {} \n\
-    for every item, return the item name from the original list, the cost to the option you found. The total cost for everything must fit inside budget of {} dollars and you should return it in a format where the item name and its respective price is separated by a colon but every group of item name: price is separated by a comma. The format should contain 1 of each item.\
+    for every item, return the item name from the original list, the cost to the option you found. The total cost for everything must fit inside budget of {} dollars and you should return it in a format where the item name and its respective price is separated by a colon but every group of item name: price is separated by a comma without space after and singular space after the comma. The format should contain 1 of each item.\
     Please optimize for the total cost of all the items in the list to be as close to the budget as possible and to not just pick the cheapest items and do not exceed the budget. Do not have any text aside from the format requested. The json should not contain any excess characters too such as \\"
         , formatted_items, formatted_prices, request_data.budget);
     let response = gptcall(prompt.to_string()).await;
     let output = response.unwrap();
     let trimmed = trim_string(&output);
-    let parts = trimmed.split(", ");
+    println!("{}", trimmed);
+    let parts = trimmed[2..trimmed.len()-2].split(", ");
     let vector: Vec<String> = parts.map(String::from).collect::<Vec<String>>();
-    let sample: Vec<OptimizedItem> = vec![OptimizedItem{name: "Food".to_string(), item_link: "google.com".to_string(), cost: 6.99}, OptimizedItem{name: "backend".to_string(), item_link: "conrad_sad.com".to_string(), cost: 9999.01}];
-    (StatusCode::OK, Json(sample))
+    let finalvector = join_all(vector.iter().map(|item| async { link_dsdr(item.clone(), items_optimized.clone()).await })).await;
+    (StatusCode::OK, Json(finalvector))
 }
 
 pub async fn price_dive (item_vec: Vec<OptimizedItem>) -> OptimizedItemGPT{
@@ -97,6 +98,27 @@ fn trim_string(input: &str) -> &str {
             }
         }
     }
+    return input;
+}
 
-    return input; // Return the original string if no alphanumeric characters are found.
+async fn link_dsdr(nameandprice: String, items_vec: Vec<Vec<OptimizedItem>>) -> OptimizedItem{
+    println!("{}", nameandprice);
+    let name: String = nameandprice[0..nameandprice.find(":").unwrap()].to_string();
+    println!("If error out: here it is: {}", nameandprice[nameandprice.find(":").unwrap()+1..].to_string());
+    let price: f64 = nameandprice[nameandprice.find(":").unwrap()+1..].to_string().parse::<f64>().unwrap();
+    for vectors in items_vec{
+        for elements in vectors{
+            if elements.name != name{
+                break;
+            }
+            if elements.cost == price{
+                return OptimizedItem{
+                    name,
+                    cost: price,
+                    item_link: elements.item_link,
+                };
+            }
+        }
+    }
+    return OptimizedItem{name: "".to_string(), cost: 0.0, item_link: "".to_string()};
 }

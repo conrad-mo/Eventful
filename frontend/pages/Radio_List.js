@@ -1,19 +1,24 @@
-import { useState,useEffect, useCallback} from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, View,Text,Modal,} from "react-native";
-import { Button, IconButton, TextInput,ActivityIndicator} from "react-native-paper";
+import { useState,useEffect,useCallback} from "react";
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Modal, } from "react-native";
+import { Button, IconButton, TextInput, ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 
 
 
 
-export default function RadioList({navigation}){
+export default function RadioList({ navigation, route }) {
     let [it, setIt] = useState([]);
+    const [checked, setChecked] = useState(new Array(15).fill(false));
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
     let [checkClicked,setCheckedClicked] = useState(false);
-    const [checked,setChecked] = useState(new Array(15).fill(false));
-    
+        const { eventName, searchQuery } = route.params;
+    let [ChosenArray, setChosenArray] = useState([]);
+    const trueIndices = [];
+    const trueElements = [];
+
+
     const getData = async () => {
         try {
             const result = await fetch('http://3.145.78.170:3000/generateitems', {
@@ -23,13 +28,13 @@ export default function RadioList({navigation}){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "event": "Birthday party under 10 items",
-                    "budget": 50
+                    "event": "eventName",
+                    "budget": +searchQuery
                 }),
             });
 
             const data = await result.json()
-            console.log("good data"+ data);
+
             setIt(data);
             setIsLoading(false);
             setResponse(data);
@@ -47,14 +52,18 @@ export default function RadioList({navigation}){
         getData();
     }, []);
 
-    const getContent = () =>{
+    const getContent = () => {
+  
         if (isLoading) {
+
+
             return (
                 <View>
-                  <ActivityIndicator size="large" animating={true} color='#EE4266' />
-                  <Text style={{ marginTop: 20}}>Generating your items...</Text>
+                    <ActivityIndicator size="large" animating={true} color='#EE4266' />
+                    <Text style={{ marginTop: 30, fontSize: 18 }}>Generating your items...</Text>
                 </View>
-              );
+            );
+          
 
         }
 
@@ -64,7 +73,8 @@ export default function RadioList({navigation}){
 
         if (!response) {
             return <Text>Invalid response format</Text>;
-          }
+        }
+        
 
         return null;
     }
@@ -178,72 +188,79 @@ export default function RadioList({navigation}){
         </View>
     )
 
-    }
+}
+
 
 const styles = StyleSheet.create({
-    
-    loading:{
+
+    loading: {
         flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    },
-    container:{
-        padding:10,
-        backgroundcolor : '#FFFFFF',
-        flexDirection : 'column',
-        borderColor : '#303030',
+        alignItems: 'center',
         justifyContent: 'center',
-        
-        
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    itembox :{
-        flexDirection : 'row',
-        backgroundColor :'rgba(238, 66, 102, 0.1)', 
-        padding: 5, 
+    container: {
+        padding: 10,
+        backgroundcolor: '#FFFFFF',
+        flexDirection: 'column',
+        borderColor: '#303030',
+        justifyContent: 'center',
+    },
+  
+    itembox: {
+        flexDirection: 'row',
+        backgroundColor: 'rgba(238, 66, 102, 0.1)',
+        padding: 5,
         paddingLeft: 20,
         height: 60,
         borderRadius: 2,
     },
-    itemtext:{
-        borderRadius:6,
-        padding : 5,
-        textAlign : 'right',
-        
+
+    itemtext: {
+        borderRadius: 6,
+        padding: 5,
+        textAlign: 'right',
+
     },
-    textwrap : {
-        justifyContent:'center',
-        marginTop : 50,
-        marginBottom : 50,
-        marginLeft : 45
-        
+    textwrap: {
+        justifyContent: 'center',
+        marginTop: 50,
+        marginBottom: 50,
+        marginLeft: 45
+
     },
-    button : {
-        marginBottom : 50,
-        marginTop : 50,
+    button: {
+        marginBottom: 50,
+        marginTop: 50,
         // marginLeft : 45,
-        height : 40,
+        height: 40,
         width: '90%',
         left: '5%',
-        backgroundColor : '#303030',
-        justifyContent :'center',
+        backgroundColor: '#303030',
+        justifyContent: 'center',
+        backgroundColor: '#303030',
+        justifyContent: 'center',
         borderRadius: 10
     },
-    buttontext :{
-        justifyContent : 'center',
-        alignItems : 'center'
+    buttontext: {
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    add:{
-        alignSelf:'flex-end'
+    add: {
+        alignSelf: 'flex-end'
     },
-    centeredView:{
+    centeredView: {
         marginTop: '90%',
-        justifyContent:'center',
-        alignSelf:'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
         height: 60,
-        width:'80%',
-        backgroundColor:'#FFFFFF',
-        borderRadius:10,
-        fontSize : 24
+        width: '80%',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        fontSize: 24
 
     }
 }

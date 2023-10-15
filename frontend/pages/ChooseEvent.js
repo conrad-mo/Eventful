@@ -33,7 +33,7 @@ const ChooseEvent = ({ navigation }) => {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                 />
-                <Button mode="contained" onPress={() => navigation.navigate('Budget')} style={styles.whiteButton}
+                <Button mode="contained" onPress={() => navigation.navigate('Budget', {eventName: searchQuery})} style={styles.whiteButton}
                     labelStyle={{ textAlign: 'center', color: 'white', }} contentStyle={{ backgroundColor: 'black', }} title="Next">Next
                 </Button>
                 <Button mode="contained" onPress={() => navigation.navigate('HomeScreen')} style={styles.blackButton}
