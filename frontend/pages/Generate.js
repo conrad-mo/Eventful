@@ -14,7 +14,7 @@ const Generate = ({ navigation, route }) => {
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
-    const {chosenElements} = route.params;
+    const {chosenElements, budget} = route.params;
     // let items = ['item1', 'item2', 'item3', 'item4', '...'];
     // let descriptions = ['pepfdsfvdfghjhgfrtyuikfjdsbvwerbkjfhvwbrtkegyaauvb jvhgfe', 'popo', 'papa', 'pupu', '...'];
     const [items, setItems] = useState([]);
@@ -33,7 +33,7 @@ const Generate = ({ navigation, route }) => {
                     },
                     body: JSON.stringify({
                         "items": chosenElements,
-                        "budget": 50
+                        "budget": +budget
                     }),
                 });
                 console.log('\n\n3\n\n\n\n')
@@ -91,7 +91,7 @@ const Generate = ({ navigation, route }) => {
             return (
                 <View>
                     <ActivityIndicator size="large" animating={true} color='#EE4266' />
-                    <Text style={{ marginTop: 20 }}>Optimizing items and prices...</Text>
+                    <Text style={{ marginTop: 30, fontSize: 18 }}>Optimizing items and prices...</Text>
                 </View>
             );
 
@@ -131,7 +131,7 @@ const Generate = ({ navigation, route }) => {
                             </List.Section>
                         </ScrollView>
                     </View>
-                    <Button mode="contained" onPress={() => navigation.navigate('Card')} style={styles.customButton}
+                    <Button mode="contained" onPress={() => navigation.navigate('ChooseEvent')} style={styles.customButton}
                         labelStyle={{ textAlign: 'center' }} contentStyle={{ backgroundColor: 'black' }}>New Event
                     </Button>
                 </PaperProvider>

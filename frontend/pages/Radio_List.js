@@ -12,7 +12,6 @@ export default function RadioList({ navigation, route }) {
     let [error, setError] = useState();
     let [response, setResponse] = useState();
     const { eventName, searchQuery } = route.params;
-    let [ChosenArray, setChosenArray] = useState([]);
     const trueIndices = [];
     const trueElements = [];
 
@@ -197,7 +196,7 @@ export default function RadioList({ navigation, route }) {
                                 {items}
                             </ScrollView>
                         </View>
-                        <Button labelStyle={styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements})} style={styles.button} mode="contained">Optimize Cost!</Button>
+                        <Button labelStyle={styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements, budget: searchQuery})} style={styles.button} mode="contained">Optimize Cost!</Button>
                     </View>
                 </View>
             )}

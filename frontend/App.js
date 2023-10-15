@@ -37,14 +37,14 @@ const App = () => {
         name = "Radio_List"
         component = {RadioList}
         options={{ headerShown: false,
-                    /*gestureEnabled: false*/ }}
+                    gestureEnabled: false }}
 
         />
         <Stack.Screen
           name="Generate"
           component={Generate}
           options={{ headerShown: false,
-                    /*gestureEnabled: false*/ }}
+                    gestureEnabled: false }}
         
         />
 
