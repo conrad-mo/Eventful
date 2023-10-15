@@ -12,9 +12,8 @@ export default function RadioList({navigation, route}){
     let [error, setError] = useState();
     let [response, setResponse] = useState();
     const {eventName, searchQuery} = route.params;
+    let [ChosenArray, setChosenArray] = useState([]);
 
-    console.log(typeof eventName);
-    console.log(typeof searchQuery);
 
     const getData = async () => {
         try {
@@ -31,7 +30,7 @@ export default function RadioList({navigation, route}){
             });
           
             const data = await result.json()
-            console.log(data);
+            
             setIt(data);
             setIsLoading(false);
             setResponse(data);
@@ -51,7 +50,7 @@ export default function RadioList({navigation, route}){
             return (
                 <View>
                   <ActivityIndicator size="large" animating={true} color='#EE4266' />
-                  <Text style={{ marginTop: 20}}>Generating your items...</Text>
+                  <Text style={{ marginTop: 30, fontSize: 18}}>Generating your items...</Text>
                 </View>
               );
 
@@ -74,6 +73,10 @@ export default function RadioList({navigation, route}){
         );
         setChecked(updatedChecked);
     }
+    const getItems = (item) =>{
+        setChosenArray(ChosenArray => [...(ChosenArray || []), item]);
+        console.log(ChosenArray);
+    }
 
     let items = it.map((item,index)=> 
         index < 10?
@@ -91,8 +94,13 @@ export default function RadioList({navigation, route}){
             checked={checked[it.indexOf(item)]}
             containerStyle = {styles.itembox}
             textStyle = {{fontSize: 20, fontWeight: 'normal'}}
-            onPress={() => handleOnChange(it.indexOf(item))}
+            onPress={() => {
+                ChosenArray.push(item);
+                getItems(item)
+                handleOnChange(it.indexOf(item))}} 
+                
             />
+            
             </View>
         </TouchableOpacity> : ""
     );
@@ -147,7 +155,7 @@ export default function RadioList({navigation, route}){
                         />
                         </View>
                     </TouchableOpacity>)
-                    console.log({items})
+                    // console.log({items})
                 }
                 setVisibility(false)
                 }}> done!</Button>
@@ -166,7 +174,7 @@ export default function RadioList({navigation, route}){
                     {items}
                 </ScrollView>
             </View>
-        <Button labelStyle = {styles.buttontext} onPress={() => navigation.navigate('Generate')} style = {styles.button} mode = "contained">Optimize Cost!</Button>
+        <Button labelStyle = {styles.buttontext} onPress={() => navigation.navigate('Generate', { chosenItems: ChosenArray })} style = {styles.button} mode = "contained">Optimize Cost!</Button>
         </View>
         </View>
             )}

@@ -8,7 +8,7 @@ import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { useEffect, useState } from 'react';
 import { List } from 'react-native-paper';
 
-const Generate = ({ navigation }) => {
+const Generate = ({ navigation, route }) => {
     const colorScheme = useColorScheme();
     const { theme } = useMaterial3Theme();
     let [isLoading, setIsLoading] = useState(true);
@@ -16,6 +16,7 @@ const Generate = ({ navigation }) => {
     let [response, setResponse] = useState();
     let items = ['item1', 'item2', 'item3', 'item4', '...'];
     let descriptions = ['pepfdsfvdfghjhgfrtyuikfjdsbvwerbkjfhvwbrtkegyaauvb jvhgfe', 'popo', 'papa', 'pupu', '...'];
+    const {chosenItems} = route.params;
 
     useEffect(() => {
         fetch(`https://jsonplaceholder.typicode.com/posts?_limit=8`).then(res => res.json()).then((result) => {
