@@ -188,15 +188,14 @@ export default function RadioList({ navigation, route }) {
         <View style = {{flexDirection:"column", width: 350, justifyContent :'center'}}>
             <View style ={styles.textwrap}>
                 <View style = {{flexDirection:'row'}}>
-                <Text style = {{fontWeight: 600, fontSize : 28}} > Here's a </Text>
-                <Text style = {{fontWeight: 600, fontSize : 28,color :'#EE4266' }}> list of Items</Text>
+                <Text style = {{fontWeight: 600, fontSize : 28}} >Here's a </Text>
+                <Text style = {{fontWeight: 600, fontSize : 28,color :'#EE4266'}}>list of Items</Text>
                </View>
-                <Text style = {{fontWeight: 600, fontSize : 28}}> we came up with </Text>
+                <Text style = {{fontWeight: 600, fontSize : 28}}>we came up with </Text>
              </View>
             <View style = {{marginLeft:0,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
                 <ScrollView contentContainerStyle = {styles.container}>
                     {!checkClicked? allitems:items}
-                    
                 </ScrollView>
             </View>
             <Button labelStyle={styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements, budget: searchQuery})} style={styles.button} mode="contained">Optimize Cost!</Button>
@@ -213,8 +212,6 @@ const styles = StyleSheet.create({
 
     loading: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -245,7 +242,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 50,
         marginBottom: 50,
-        marginLeft: 45
+        alignItems: 'center',
 
     },
     button: {
@@ -255,8 +252,6 @@ const styles = StyleSheet.create({
         height: 40,
         width: '90%',
         left: '5%',
-        backgroundColor: '#303030',
-        justifyContent: 'center',
         backgroundColor: '#303030',
         justifyContent: 'center',
         borderRadius: 10
@@ -270,8 +265,6 @@ const styles = StyleSheet.create({
     },
     centeredView: {
         marginTop: '90%',
-        justifyContent: 'center',
-        alignSelf: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         height: 60,

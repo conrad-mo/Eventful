@@ -25,9 +25,10 @@ const ChooseEvent = ({ navigation }) => {
             
             <StatusBar style="auto"/>
             <View style={styles.text}>
-                <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 24 }}>
+              <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 24, textAlign:'center'}}>
                     Type in an <Text style={{ fontWeight: 'bold', color: '#EE4266', fontSize: 24 }}>event</Text> that you would like to host
                 </Text>
+                
                 <Searchbar style={{ backgroundColor: '#eaeaea', borderRadius: 4, top:20, borderColor: 'black', }}
                     placeholder="Enter an event..."
                     onChangeText={onChangeSearch}
@@ -52,7 +53,6 @@ const styles = StyleSheet.create({
     text: {
         top: 200,
         padding: 30,
-
     },
     whiteButton: {
         width: '85%',
