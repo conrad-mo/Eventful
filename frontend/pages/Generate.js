@@ -115,88 +115,58 @@ const Generate = ({ navigation, route }) => {
     //     return <Text>Invalid response format</Text>;
     // }
 
-    console.log(response);
+        console.log(response);
+        return (
+            <View>
+                <PaperProvider theme={paperTheme}>
+                    <StatusBar style="auto" />
+                    <View>
+                        <Text style={{ fontWeight: 'bold', fontSize: 28, textAlign: 'center', padding: '5%', top: '140%' }}>Here’s a {'\n'}<Text style={{ color: '#EE4266' }}>list of affordable items</Text>{'\n'} we chose</Text>
+                        {/* {response} */}
+                    </View>
+                    <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: '12%', top: '20%', maxHeight: '30%', left: '5%', maxWidth: '90%', overflow: 'hidden' }}>
+                        <ScrollView contentContainerStyle={{flexDirection:'column',alignSelf:'center',flex:1}}>
+                            <List.Section style={{ maxHeight: '100%'}}>
+                                {items.map((item, index) => (
+                                    <View style = {{padding:10}}>
+                                    <List.Item
+                                        key={index}
+                                        title={item}
+                                        description={prices[index]}
+                                        left={props => <List.Icon {...props} icon="link-variant" />}
+                                        // onPress={() => Linking.openURL('http://www.google.com')}
+                                        onPress={() => Linking.openURL(links[index])}
+                                        style={{ flexDirection:'row',backgroundColor: 'rgba(238, 66, 102, 0.1)', borderBottomWidth: 10, borderBottomColor: '#f1f1f1' }}
+                                    />
+                                    </View>
+                                ))}
+                            </List.Section>
+                        </ScrollView>
+                    </View>
+                    <Button mode="contained" onPress={() => navigation.navigate('ChooseEvent')} style={styles.customButton}
+                        labelStyle={{ textAlign: 'center' }} contentStyle={{ backgroundColor: 'black' }}>New Event
+                    </Button>
+                </PaperProvider>
+            </View>
+        );
+
+
+    }
+    const paperTheme =
+        colorScheme === 'dark'
+            ? { ...MD3DarkTheme, colors: theme.dark }
+            : { ...MD3LightTheme, colors: theme.light };
     return (
-      <View>
         <PaperProvider theme={paperTheme}>
-          <StatusBar style="auto" />
-          <View>
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 28,
-                textAlign: "center",
-                padding: "5%",
-                top: "140%",
-              }}
-            >
-              Here’s a {"\n"}
-              <Text style={{ color: "#EE4266" }}>list of affordable items</Text>
-              {"\n"} we chose
-            </Text>
-            {/* {response} */}
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "rgba(238, 66, 102, 0.1)",
-              marginTop: "12%",
-              top: "20%",
-              maxHeight: "30%",
-              left: "5%",
-              maxWidth: "90%",
-              overflow: "hidden",
-            }}
-          >
-            <ScrollView style={{ width: "100%" }}>
-              <List.Section style={{ maxHeight: "100%" }}>
-                {items.map((item, index) => (
-                  <List.Item
-                    key={index}
-                    title={item}
-                    description={prices[index]}
-                    left={(props) => (
-                      <List.Icon {...props} icon="link-variant" />
-                    )}
-                    // onPress={() => Linking.openURL('http://www.google.com')}
-                    onPress={() => Linking.openURL(links[index])}
-                    style={{
-                      width: "100%",
-                      borderBottomWidth: 20,
-                      borderBottomColor: "#f1f1f1",
-                    }}
-                  />
-                ))}
-              </List.Section>
-            </ScrollView>
-          </View>
-          <Button
-            mode="contained"
-            onPress={() => navigation.navigate("ChooseEvent")}
-            style={styles.customButton}
-            labelStyle={{ textAlign: "center" }}
-            contentStyle={{ backgroundColor: "black" }}
-          >
-            New Event
-          </Button>
+            <StatusBar style="auto" />
+            <View style={styles.container}>
+                {getContent()}
+                <View style={styles.text}>
+
+                </View>
+            </View>
         </PaperProvider>
-      </View>
     );
-  };
-  const paperTheme =
-    colorScheme === "dark"
-      ? { ...MD3DarkTheme, colors: theme.dark }
-      : { ...MD3LightTheme, colors: theme.light };
-  return (
-    <PaperProvider theme={paperTheme}>
-      <StatusBar style="auto" />
-      <View style={styles.container}>
-        {getContent()}
-        <View style={styles.text}></View>
-      </View>
-    </PaperProvider>
-  );
 };
 
 const styles = StyleSheet.create({

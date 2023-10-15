@@ -94,71 +94,72 @@ export default function RadioList({ navigation, route }) {
     console.log('here ' + trueElements);
   };
 
-  useEffect(() => {
-    chosen(checked, it);
-  }, [checked]);
+    useEffect(() => {
+        chosen(checked,it);
+    }, [checked]);
+   
 
-  const handleOnChange = (id) => {
-    const newChecked = [...checked];
-    newChecked[id] = !newChecked[id];
-    setChecked(newChecked);
-  };
-
-  const itemsArray = it.map((item, index) => (
-    <TouchableOpacity key={index}>
-      <View>
-        <CheckBox
-          backgroundcolor="#FDECF0"
-          center
-          title={item}
-          size={26}
-          right
-          checkedColor="#EE4266"
-          checked={checked[index]}
-          containerStyle={styles.itembox}
-          textStyle={{ fontSize: 20, fontWeight: "normal" }}
-          onPress={() => handleOnChange(index)}
+    
+    const handleOnChange = (id) => {
+        const newChecked = [...checked];
+        newChecked[id] = !newChecked[id];
+        setChecked(newChecked);
+      };
+    
+    let itemsArray = it.map((item, index) => (
+        <TouchableOpacity key={index}>
+          <View>
+          <CheckBox
+        backgroundcolor = '#FDECF0'
+        center
+        title={item}
+        size={26}
+        right
+        checkedColor="#EE4266"
+        checked={checked[index]}
+        containerStyle = {styles.itembox}
+        textStyle = {{fontSize: 20, fontWeight: 'normal'}}
+        onPress={() => handleOnChange(index)}
         />
-      </View>
-    </TouchableOpacity>
-  ));
-  const allitems = itemsArray.slice(0, 10);
-  let [items, setItems] = useState(allitems);
-  const [visibility, setVisibility] = useState(false);
-  const [text, setText] = useState("");
-  return (
-    <View style={styles.loading}>
-      {getContent()}
-      {!isLoading && (
-        <View>
-          {/* IMPORTANT SHIT HERE BRUHHHHHHH HERE HERRE RIGHT HERE WHERE ALL THE IMPORTANT SHIT IS */}
-          <IconButton
-            style={{ alignSelf: "flex-end" }}
-            size={32}
-            icon="plus"
-            onPress={() => {
-              setVisibility(true);
-              setItems(checkClicked ? items : allitems);
-            }}
-          />
-          <Modal
-            animationType="slide"
-            transparent={false}
+        </View>
+        </TouchableOpacity>
+      ));
+      
+      if(itemsArray.length > 10){
+         itemsArray = itemsArray.slice(0,10)
+      }
+      
+
+      let [items,setItems] = useState(itemsArray);  
+      const [visibility,setVisibility] = useState(false);
+      const [text, setText] = useState("");
+    return (
+        <View style={styles.loading}>
+             {getContent()}
+            {!isLoading && (
+                <View>
+            <IconButton style = {{alignSelf:'flex-end'}} size = {32} icon="plus" onPress = {()=>{
+                setVisibility(true);
+                setItems(checkClicked ? items : itemsArray);
+            }}/>
+            <Modal
+            animationType="slide" 
+            transparent = {true}
             visible={visibility}
             onDismiss={() => {
               setVisibility(false);
             }}
             onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-              setVisibility(false);
-            }}
-          >
-            <View>
-              <TextInput
-                clearButtonMode="always"
+             Alert.alert('Modal has been closed.');
+            setVisibility(false);
+        }}>
+         <View>
+            <TextInput
+                placeholder="insert a new item"
+                backgroundColor = '#E8E8E8'
                 mode="outlined"
-                style={styles.centeredView}
-                label="add item"
+                style = {styles.centeredView}
+                label="add your item"
                 value={text}
                 onChangeText={(text) => setText(text)}
                 activeOutlineColor="#EE4266"
@@ -177,16 +178,16 @@ export default function RadioList({ navigation, route }) {
                     <TouchableOpacity key={checked.length - 1}>
                       <View>
                         <CheckBox
-                          backgroundcolor="#FDECF0"
-                          center
-                          title={text}
-                          size={26}
-                          right
-                          checkedColor="#EE4266"
-                          checked={checked[checked.length - 1]}
-                          containerStyle={styles.itembox}
-                          textStyle={{ fontSize: 20, fontWeight: "normal" }}
-                          onPress={() => handleOnChange(checked.length)}
+                        backgroundcolor = '#FDECF0'
+                        center
+                        title={text}
+                        size={26}
+                        right
+                        checkedColor="#EE4266"
+                        checked={true}
+                        containerStyle = {styles.itembox}
+                        textStyle = {{fontSize: 20, fontWeight: 'normal'}}
+                        onPress={() => handleOnChange(checked.length-1)}
                         />
                       </View>
                     </TouchableOpacity>,
@@ -195,45 +196,23 @@ export default function RadioList({ navigation, route }) {
                 }
                 setVisibility(false);
                 setCheckedClicked(true);
-              }}
-            >
-              {" "}
-              done!
-            </Button>
-          </Modal>
-
-          <View
-            style={{
-              flexDirection: "column",
-              width: 350,
-              justifyContent: "center",
-            }}
-          >
-            <View style={styles.textwrap}>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ fontWeight: 600, fontSize: 28 }}>Here's a </Text>
-                <Text
-                  style={{ fontWeight: 600, fontSize: 28, color: "#EE4266" }}
-                >
-                  list of Items
-                </Text>
-              </View>
-              <Text style={{ fontWeight: 600, fontSize: 28 }}>
-                we came up with{" "}
-              </Text>
-            </View>
-            <View
-              style={{
-                marginLeft: 0,
-                marginBottom: 50,
-                alignSelf: "center",
-                height: 300,
-                width: "110%",
-              }}
-            >
-              <ScrollView contentContainerStyle={styles.container}>
-                {!checkClicked ? allitems : items}
-              </ScrollView>
+                setText('');
+                }}> done!</Button>
+        </Modal>
+    
+        <View style = {{flexDirection:"column", width: 350, justifyContent :'center'}}>
+            <View style ={styles.textwrap}>
+                <View style = {{flexDirection:'row'}}>
+                <Text style = {{fontWeight: 600, fontSize : 28}} > Here's a </Text>
+                <Text style = {{fontWeight: 600, fontSize : 28,color :'#EE4266' }}> list of Items</Text>
+               </View>
+                <Text style = {{fontWeight: 600, fontSize : 28}}> we came up with </Text>
+             </View>
+            <View style = {{marginLeft:0,marginBottom:50,alignSelf:'center',height: 300, width:'110%'}}>
+                <ScrollView contentContainerStyle = {styles.container}>
+                    {!checkClicked? itemsArray:items}
+                    
+                </ScrollView>
             </View>
             <Button
               labelStyle={styles.buttontext}
