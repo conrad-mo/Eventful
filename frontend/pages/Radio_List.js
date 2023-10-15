@@ -47,7 +47,7 @@ export default function RadioList({ navigation, route }) {
     }, []);
 
     const getContent = () => {
-    const getContent = () => {
+  
         if (isLoading) {
 
 
@@ -68,7 +68,7 @@ export default function RadioList({ navigation, route }) {
         if (!response) {
             return <Text>Invalid response format</Text>;
         }
-        }
+        
 
         return null;
     }
@@ -82,12 +82,6 @@ export default function RadioList({ navigation, route }) {
         );
         setChecked(updatedChecked);
     }
-   
-    const getItems = (item) => {
-        setChosenArray(ChosenArray => [...(ChosenArray || []), item]);
-        console.log(ChosenArray);
-    }
-
 
 
     let items = it.map((item, index) =>
@@ -107,8 +101,6 @@ export default function RadioList({ navigation, route }) {
                         containerStyle={styles.itembox}
                         textStyle={{ fontSize: 20, fontWeight: 'normal' }}
                         onPress={() => {
-                            ChosenArray.push(item);
-                            getItems(item)
                             handleOnChange(it.indexOf(item))
                         }}
 
@@ -205,7 +197,7 @@ export default function RadioList({ navigation, route }) {
                                 {items}
                             </ScrollView>
                         </View>
-                        <Button labelStyle={styles.buttontext} onPress={() => navigation.navigate('Generate')} style={styles.button} mode="contained">Optimize Cost!</Button>
+                        <Button labelStyle={styles.buttontext} onPress={() => navigation.navigate('Generate', {chosenElements: trueElements})} style={styles.button} mode="contained">Optimize Cost!</Button>
                     </View>
                 </View>
             )}

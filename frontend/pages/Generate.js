@@ -14,6 +14,7 @@ const Generate = ({ navigation, route }) => {
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
+    const {chosenElements} = route.params;
     // let items = ['item1', 'item2', 'item3', 'item4', '...'];
     // let descriptions = ['pepfdsfvdfghjhgfrtyuikfjdsbvwerbkjfhvwbrtkegyaauvb jvhgfe', 'popo', 'papa', 'pupu', '...'];
     const [items, setItems] = useState([]);
@@ -31,7 +32,7 @@ const Generate = ({ navigation, route }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        "items": ["Balloon", "Tablecloth", "Cups", "Party hats"],
+                        "items": chosenElements,
                         "budget": 50
                     }),
                 });
