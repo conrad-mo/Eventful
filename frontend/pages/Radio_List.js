@@ -8,11 +8,9 @@ import { CheckBox } from "react-native-elements";
 export default function RadioList({ navigation, route }) {
     let [it, setIt] = useState([]);
     const [checked, setChecked] = useState(new Array(15).fill(false));
-    const [checked, setChecked] = useState(new Array(15).fill(false));
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
-    const { eventName, searchQuery } = route.params;
     const { eventName, searchQuery } = route.params;
     let [ChosenArray, setChosenArray] = useState([]);
     const trueIndices = [];
@@ -59,7 +57,7 @@ export default function RadioList({ navigation, route }) {
                     <Text style={{ marginTop: 30, fontSize: 18 }}>Generating your items...</Text>
                 </View>
             );
-            );
+          
 
         }
 
@@ -75,16 +73,16 @@ export default function RadioList({ navigation, route }) {
         return null;
     }
 
-    const handleOnChange = (id) => {
+    
 
     const handleOnChange = (id) => {
         const updatedChecked = checked.map((item, index) =>
             index === id ? !item : item
-            index === id ? !item : item
+            
         );
         setChecked(updatedChecked);
     }
-    const getItems = (item) => {
+   
     const getItems = (item) => {
         setChosenArray(ChosenArray => [...(ChosenArray || []), item]);
         console.log(ChosenArray);
@@ -143,8 +141,6 @@ export default function RadioList({ navigation, route }) {
     const [visibility, setVisibility] = useState(false);
     const [text, setText] = useState("");
     return (
-        <View style={styles.loading}>
-            {getContent()}
         <View style={styles.loading}>
             {getContent()}
             {!isLoading && (
@@ -217,11 +213,9 @@ export default function RadioList({ navigation, route }) {
     )
 
 }
-}
+
 
 const styles = StyleSheet.create({
-
-    loading: {
 
     loading: {
         flex: 1,
@@ -235,21 +229,9 @@ const styles = StyleSheet.create({
         backgroundcolor: '#FFFFFF',
         flexDirection: 'column',
         borderColor: '#303030',
-    container: {
-        padding: 10,
-        backgroundcolor: '#FFFFFF',
-        flexDirection: 'column',
-        borderColor: '#303030',
         justifyContent: 'center',
-
-
-
-
     },
-    itembox: {
-        flexDirection: 'row',
-        backgroundColor: 'rgba(238, 66, 102, 0.1)',
-        padding: 5,
+  
     itembox: {
         flexDirection: 'row',
         backgroundColor: 'rgba(238, 66, 102, 0.1)',
@@ -258,10 +240,6 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 2,
     },
-    itemtext: {
-        borderRadius: 6,
-        padding: 5,
-        textAlign: 'right',
 
     itemtext: {
         borderRadius: 6,
@@ -279,9 +257,6 @@ const styles = StyleSheet.create({
     button: {
         marginBottom: 50,
         marginTop: 50,
-    button: {
-        marginBottom: 50,
-        marginTop: 50,
         // marginLeft : 45,
         height: 40,
         width: '90%',
@@ -295,16 +270,10 @@ const styles = StyleSheet.create({
     buttontext: {
         justifyContent: 'center',
         alignItems: 'center'
-    buttontext: {
-        justifyContent: 'center',
-        alignItems: 'center'
     },
     add: {
         alignSelf: 'flex-end'
-    add: {
-        alignSelf: 'flex-end'
     },
-    centeredView: {
     centeredView: {
         marginTop: '90%',
         justifyContent: 'center',
@@ -312,10 +281,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         height: 60,
-        width: '80%',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 10,
-        fontSize: 24
         width: '80%',
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
