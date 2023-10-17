@@ -124,9 +124,9 @@ const Generate = ({ navigation, route }) => {
                         <Text style={{ fontWeight: 'bold', fontSize: 28, textAlign: 'center', padding: '5%', top: '140%' }}>Here’s a {'\n'}<Text style={{ color: '#EE4266' }}>list of affordable items</Text>{'\n'} we chose</Text>
                         {/* {response} */}
                     </View>
-                    <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: '12%', top: '20%', maxHeight: '30%', left: '5%', maxWidth: '90%', overflow: 'hidden' }}>
-                        <ScrollView contentContainerStyle={{flexDirection:'column',alignSelf:'center',flex:1}}>
-                            <List.Section style={{ maxHeight: '100%'}}>
+                    <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: '12%', top: '20%', maxHeight: '30%', left: '5%', maxWidth: '90%',flex:1,flexGrow: 1}}>
+                        <ScrollView contentContainerStyle={{justifyContent:'center'}}>
+                            <List.Section key = {'list'} >
                                 {items.map((item, index) => (
                                     <View style = {{padding:10}}>
                                     <List.Item
